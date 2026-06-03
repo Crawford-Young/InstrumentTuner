@@ -1,5 +1,7 @@
-import '@testing-library/jest-dom'
 import { vi, beforeEach } from 'vitest'
+
+// Import jest-dom matchers
+import '@testing-library/jest-dom'
 
 const mockGetFloatFrequencyData = vi.fn((array: Float32Array) => array.fill(-100))
 const mockConnect = vi.fn()
