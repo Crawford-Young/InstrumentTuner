@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 export type AudioAnalyzerError = 'permission-denied' | 'no-input' | 'suspended' | null
 
 export interface AudioAnalyzerState {
-  readonly frequencyData: Float32Array | null
+  readonly frequencyData: Float32Array<ArrayBuffer> | null
   readonly isRunning: boolean
   readonly error: AudioAnalyzerError
   readonly start: () => Promise<void>
@@ -17,13 +17,13 @@ const FFT_SIZE = 32768
 export function useAudioAnalyzer(): AudioAnalyzerState {
   const [isRunning, setIsRunning] = useState(false)
   const [error, setError] = useState<AudioAnalyzerError>(null)
-  const [frequencyData, setFrequencyData] = useState<Float32Array | null>(null)
+  const [frequencyData, setFrequencyData] = useState<Float32Array<ArrayBuffer> | null>(null)
 
   const contextRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const rafRef = useRef<number | null>(null)
-  const dataArrayRef = useRef<Float32Array | null>(null)
+  const dataArrayRef = useRef<Float32Array<ArrayBuffer> | null>(null)
 
   const loop = useCallback(() => {
     if (!analyserRef.current || !dataArrayRef.current) return
