@@ -79,12 +79,30 @@ describe('useAudioAnalyzer', () => {
     expect(mockAudioContext.close).toHaveBeenCalled()
   })
 
+  it('guards against double-start: second start() returns early', async () => {
+    const { result } = renderHook(() => useAudioAnalyzer())
+    await act(async () => { await result.current.start() })
+    const callsBefore = (navigator.mediaDevices.getUserMedia as ReturnType<typeof vi.fn>).mock.calls.length
+    // Calling start again while already running should return early
+    await act(async () => { await result.current.start() })
+    const callsAfter = (navigator.mediaDevices.getUserMedia as ReturnType<typeof vi.fn>).mock.calls.length
+    // Second start() should return early without calling getUserMedia again
+    expect(callsAfter).toBe(callsBefore)
+    expect(result.current.isRunning).toBe(true)
+    // Verify that calling start a third time also doesn't call getUserMedia
+    await act(async () => { await result.current.start() })
+    expect((navigator.mediaDevices.getUserMedia as ReturnType<typeof vi.fn>).mock.calls.length).toBe(callsBefore)
+  })
+
   it('clears error on subsequent start()', async () => {
     const notAllowed = new DOMException('Denied', 'NotAllowedError')
     ;(navigator.mediaDevices.getUserMedia as ReturnType<typeof vi.fn>).mockRejectedValueOnce(notAllowed)
     const { result } = renderHook(() => useAudioAnalyzer())
     await act(async () => { await result.current.start() })
     expect(result.current.error).toBe('permission-denied')
+    // Stop first to clear the context ref, then subsequent start clears error
+    act(() => { result.current.stop() })
+    ;(navigator.mediaDevices.getUserMedia as ReturnType<typeof vi.fn>).mockResolvedValueOnce(mockMediaStream)
     await act(async () => { await result.current.start() })
     expect(result.current.error).toBeNull()
   })

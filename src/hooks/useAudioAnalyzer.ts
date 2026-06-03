@@ -47,6 +47,7 @@ export function useAudioAnalyzer(): AudioAnalyzerState {
   }, [])
 
   const start = useCallback(async () => {
+    if (contextRef.current !== null) return
     setError(null)
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
@@ -70,6 +71,10 @@ export function useAudioAnalyzer(): AudioAnalyzerState {
       setIsRunning(true)
       rafRef.current = requestAnimationFrame(loop)
     } catch (err) {
+      contextRef.current?.close()
+      contextRef.current = null
+      streamRef.current?.getTracks().forEach((t) => t.stop())
+      streamRef.current = null
       if (err instanceof DOMException && err.name === 'NotAllowedError') {
         setError('permission-denied')
       } else {
