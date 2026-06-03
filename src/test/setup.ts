@@ -6,12 +6,12 @@ const mockConnect = vi.fn()
 
 export const mockAnalyserNode = {
   fftSize: 32768,
-  frequencyBinCount: 16384,
+  get frequencyBinCount() { return this.fftSize / 2 },
   getFloatFrequencyData: mockGetFloatFrequencyData,
   connect: mockConnect,
 }
 
-const mockMediaStreamSource = { connect: vi.fn() }
+export const mockMediaStreamSource = { connect: vi.fn() }
 
 export const mockAudioContext = {
   state: 'running' as AudioContextState,
@@ -28,6 +28,8 @@ export const mockMediaStream = {
 }
 
 vi.stubGlobal('AudioContext', vi.fn(() => mockAudioContext))
+// Intentionally non-invoking: the stub returns an ID but never calls the callback,
+// so the rAF loop body is not exercised in unit tests (isolation by design).
 vi.stubGlobal('requestAnimationFrame', vi.fn(() => 1))
 vi.stubGlobal('cancelAnimationFrame', vi.fn())
 
