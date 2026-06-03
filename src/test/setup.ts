@@ -29,7 +29,7 @@ export const mockMediaStream = {
   getTracks: vi.fn(() => [mockTrack]),
 }
 
-vi.stubGlobal('AudioContext', vi.fn(() => mockAudioContext))
+vi.stubGlobal('AudioContext', vi.fn(function () { return mockAudioContext }))
 // Intentionally non-invoking: the stub returns an ID but never calls the callback,
 // so the rAF loop body is not exercised in unit tests (isolation by design).
 vi.stubGlobal('requestAnimationFrame', vi.fn(() => 1))
