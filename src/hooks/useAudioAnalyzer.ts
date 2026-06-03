@@ -25,7 +25,7 @@ export function useAudioAnalyzer(): AudioAnalyzerState {
   const rafRef = useRef<number | null>(null)
   const dataArrayRef = useRef<Float32Array<ArrayBuffer> | null>(null)
 
-  const loop = useCallback(() => {
+  const loop = useCallback(function loop(): void {
     if (!analyserRef.current || !dataArrayRef.current) return
     analyserRef.current.getFloatFrequencyData(dataArrayRef.current)
     setFrequencyData(new Float32Array(dataArrayRef.current))
