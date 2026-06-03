@@ -208,4 +208,15 @@ describe('useAudioAnalyzer', () => {
     })
     expect(global.requestAnimationFrame).not.toHaveBeenCalled()
   })
+
+  it('stops tracks and closes context when AudioContext throws after getUserMedia', async () => {
+    ;(AudioContext as ReturnType<typeof vi.fn>).mockImplementationOnce(() => {
+      throw new Error('AudioContext failed')
+    })
+    const { result } = renderHook(() => useAudioAnalyzer())
+    await act(async () => { await result.current.start() })
+    expect(result.current.error).toBe('suspended')
+    const track = mockMediaStream.getTracks()[0]
+    expect(track.stop).toHaveBeenCalled()
+  })
 })
