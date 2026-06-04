@@ -137,4 +137,23 @@ describe('detectPitchYIN', () => {
   it('returns null for quiet signal below RMS threshold', () => {
     expect(detectPitchYIN(makeSine(440, 8192, 0.005), SAMPLE_RATE)).toBeNull()
   })
+
+  it('prevFreq=null gives same result as no prevFreq argument', () => {
+    const buf = makeSine(440, 8192)
+    const without = detectPitchYIN(buf, SAMPLE_RATE)
+    const withNull = detectPitchYIN(buf, SAMPLE_RATE, null)
+    expect(withNull).toBeCloseTo(without!, 1)
+  })
+
+  it('prevFreq=440 does not alter detection of clear A4 signal', () => {
+    const freq = detectPitchYIN(makeSine(440, 8192), SAMPLE_RATE, 440)
+    expect(freq).toBeCloseTo(440, 0)
+  })
+
+  it('prevFreq continuity prefers sub-harmonic when quality is similar', () => {
+    // A4 sine has candidates at tau≈100 (440 Hz) and tau≈200 (220 Hz).
+    // With prevFreq=220, continuity tips the score toward 220 Hz.
+    const freq = detectPitchYIN(makeSine(440, 8192), SAMPLE_RATE, 220)
+    expect(freq).toBeCloseTo(220, 0)
+  })
 })

@@ -4,12 +4,6 @@ const ANALYSIS_SAMPLES = 4096  // ~93ms at 44100 Hz — ~7 periods of guitar E2
 const MIN_PITCH_HZ = 65
 const MAX_PITCH_HZ = 2000
 
-// Hann window precomputed once — weights central samples, reduces edge artifacts
-const HANN_WINDOW = Float32Array.from(
-  { length: ANALYSIS_SAMPLES },
-  (_, i) => 0.5 * (1 - Math.cos((2 * Math.PI * i) / (ANALYSIS_SAMPLES - 1))),
-)
-
 export const CONCERT_PITCH = 440
 export const ALL_NOTES = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'] as const
 
@@ -29,7 +23,11 @@ export function centDeviation(detectedFreq: number, targetFreq: number): number 
   return 1200 * Math.log2(detectedFreq / targetFreq)
 }
 
-export function detectPitchYIN(buffer: Float32Array, sampleRate: number): number | null {
+export function detectPitchYIN(
+  buffer: Float32Array,
+  sampleRate: number,
+  prevFreq: number | null = null,
+): number | null {
   const minLag = Math.floor(sampleRate / MAX_PITCH_HZ)
   const maxLag = Math.floor(sampleRate / MIN_PITCH_HZ)
 
@@ -41,7 +39,7 @@ export function detectPitchYIN(buffer: Float32Array, sampleRate: number): number
   if (Math.sqrt(rms / ANALYSIS_SAMPLES) < RMS_THRESHOLD) return null
 
   // Difference function + CMNDF in one pass.
-  // Constant (DC) signal → runningSum stays 0 → NaN CMNDF → no threshold dip → returns null below.
+  // DC signal → runningSum=0 → NaN CMNDF → NaN < threshold = false → exhausts loop → null.
   const cmndf = new Float32Array(maxLag + 1)
   cmndf[0] = 1
   let runningSum = 0
@@ -50,33 +48,60 @@ export function detectPitchYIN(buffer: Float32Array, sampleRate: number): number
     let diff = 0
     for (let i = 0; i < ANALYSIS_SAMPLES; i++) {
       const delta = buffer[i] - buffer[i + tau]
-      diff += HANN_WINDOW[i] * delta * delta
+      diff += delta * delta
     }
     runningSum += diff
-    cmndf[tau] = (diff * tau) / runningSum  // NaN when runningSum=0 (DC) — handled below
+    cmndf[tau] = (diff * tau) / runningSum
   }
 
-  // Absolute threshold — first dip below threshold, slide to local minimum.
-  // NaN < threshold is always false, so DC / unpitched signals exhaust the loop.
-  let tau = minLag
-  while (tau < maxLag) {
-    if (cmndf[tau] < YIN_THRESHOLD) {
-      while (tau + 1 < maxLag && cmndf[tau + 1] < cmndf[tau]) tau++
-      break
+  // Collect ALL local minima below threshold.
+  // For a periodic signal, integer multiples of the period also dip below threshold,
+  // but with higher CMNDF values — so best-quality selection naturally finds the fundamental.
+  const candidates: Array<{ refinedTau: number; val: number }> = []
+  let t = minLag
+  while (t < maxLag) {
+    if (cmndf[t] < YIN_THRESHOLD) {
+      while (t + 1 < maxLag && cmndf[t + 1] < cmndf[t]) t++
+      const y1 = cmndf[t - 1]
+      const y2 = cmndf[t]
+      const y3 = cmndf[t + 1]
+      const denom = 2 * (y1 - 2 * y2 + y3)
+      /* v8 ignore next */
+      const refined = denom !== 0 ? t + (y1 - y3) / denom : t
+      if (refined >= minLag && refined <= maxLag) candidates.push({ refinedTau: refined, val: y2 })
+      t++
+    } else {
+      t++
     }
-    tau++
   }
-  if (tau >= maxLag) return null
 
-  // Parabolic interpolation for sub-sample accuracy.
-  // tau is always in [minLag, maxLag-1] here so neighbours are valid array indices.
-  const y1 = cmndf[tau - 1]
-  const y2 = cmndf[tau]
-  const y3 = cmndf[tau + 1]
-  const denom = 2 * (y1 - 2 * y2 + y3)
-  /* v8 ignore next */
-  const refined = denom !== 0 ? tau + (y1 - y3) / denom : tau
+  if (candidates.length === 0) return null
 
-  if (refined < minLag || refined > maxLag) return null
-  return sampleRate / refined
+  // Without a previous frequency: take the smallest-tau candidate (= fundamental, standard YIN).
+  // CMNDF values at subharmonic taus can be numerically lower due to better integer-sample
+  // alignment at n*T — quality-only scoring would wrongly prefer them.
+  if (prevFreq === null) return sampleRate / candidates[0].refinedTau
+
+  const fundamentalFreq = sampleRate / candidates[0].refinedTau
+  const jumpCents = Math.abs(1200 * Math.log2(fundamentalFreq / prevFreq))
+
+  // Large jump (> 1.25 octaves) means a new note, not harmonic ambiguity — skip continuity
+  // scoring so the detector isn't stuck near the previous pitch.
+  if (jumpCents > 1500) return fundamentalFreq
+
+  // Within a reasonable interval: score by quality + continuity so the smoothing history
+  // can hold the detector on a subharmonic when the previous frame established one.
+  const best = candidates.reduce((a, b) => {
+    const scoreA = scoreCandidateYIN(a.val, sampleRate / a.refinedTau, prevFreq)
+    const scoreB = scoreCandidateYIN(b.val, sampleRate / b.refinedTau, prevFreq)
+    return scoreB > scoreA ? b : a
+  })
+
+  return sampleRate / best.refinedTau
+}
+
+function scoreCandidateYIN(cmndfVal: number, freq: number, prevFreq: number): number {
+  const quality = 1 - cmndfVal
+  const continuity = Math.exp(-Math.abs(Math.log2(freq / prevFreq)) * 2)
+  return quality * 0.6 + continuity * 0.4
 }

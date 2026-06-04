@@ -23,6 +23,7 @@ export function usePitchDetector(
   timeDomainData: Float32Array | null,
 ): PitchDetectorResult {
   const historyRef = useRef<(number | null)[]>([])
+  const prevValidFreqRef = useRef<number | null>(null)
 
   return useMemo(() => {
     const empty: PitchDetectorResult = {
@@ -34,10 +35,11 @@ export function usePitchDetector(
 
     if (!timeDomainData) {
       historyRef.current = []
+      prevValidFreqRef.current = null
       return empty
     }
 
-    const rawFreq = detectPitchYIN(timeDomainData, SAMPLE_RATE)
+    const rawFreq = detectPitchYIN(timeDomainData, SAMPLE_RATE, prevValidFreqRef.current)
     const history = historyRef.current
 
     if (rawFreq !== null) {
@@ -55,6 +57,7 @@ export function usePitchDetector(
     if (valid.length === 0) return empty
 
     const smoothedFreq = getMedian(valid)
+    prevValidFreqRef.current = smoothedFreq
     const { note, closestPitch } = findClosestNote(smoothedFreq)
 
     return {

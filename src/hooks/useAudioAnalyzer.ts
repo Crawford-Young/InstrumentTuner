@@ -25,8 +25,8 @@ export function useAudioAnalyzer(): AudioAnalyzerState {
   const analyserRef = useRef<AnalyserNode | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const rafRef = useRef<number | null>(null)
-  const freqArrayRef = useRef<Float32Array | null>(null)
-  const timeArrayRef = useRef<Float32Array | null>(null)
+  const freqArrayRef = useRef<Float32Array<ArrayBuffer> | null>(null)
+  const timeArrayRef = useRef<Float32Array<ArrayBuffer> | null>(null)
 
   const loop = useCallback(function loop(): void {
     if (!analyserRef.current || !freqArrayRef.current || !timeArrayRef.current) return
