@@ -32,6 +32,21 @@ export const INSTRUMENTS: readonly Instrument[] = [
       { name: 'A4', frequency: 440.0 },
     ],
   },
+  {
+    id: 'bb-trumpet',
+    name: 'Bb Trumpet',
+    // Written note names; frequencies are concert pitch (written pitch down a major 2nd)
+    strings: [
+      { name: 'C4', frequency: 233.08 },
+      { name: 'D4', frequency: 261.63 },
+      { name: 'E4', frequency: 293.66 },
+      { name: 'F4', frequency: 311.13 },
+      { name: 'G4', frequency: 349.23 },
+      { name: 'A4', frequency: 392.0 },
+      { name: 'B4', frequency: 440.0 },
+      { name: 'C5', frequency: 466.16 },
+    ],
+  },
 ]
 
 export function detectClosestString(

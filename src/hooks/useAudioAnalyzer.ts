@@ -5,7 +5,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 export type AudioAnalyzerError = 'permission-denied' | 'no-input' | 'suspended' | null
 
 export interface AudioAnalyzerState {
-  readonly frequencyData: Float32Array<ArrayBuffer> | null
+  readonly frequencyData: Float32Array | null
+  readonly timeDomainData: Float32Array | null
   readonly isRunning: boolean
   readonly error: AudioAnalyzerError
   readonly start: () => Promise<void>
@@ -17,18 +18,22 @@ const FFT_SIZE = 32768
 export function useAudioAnalyzer(): AudioAnalyzerState {
   const [isRunning, setIsRunning] = useState(false)
   const [error, setError] = useState<AudioAnalyzerError>(null)
-  const [frequencyData, setFrequencyData] = useState<Float32Array<ArrayBuffer> | null>(null)
+  const [frequencyData, setFrequencyData] = useState<Float32Array | null>(null)
+  const [timeDomainData, setTimeDomainData] = useState<Float32Array | null>(null)
 
   const contextRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const rafRef = useRef<number | null>(null)
-  const dataArrayRef = useRef<Float32Array<ArrayBuffer> | null>(null)
+  const freqArrayRef = useRef<Float32Array | null>(null)
+  const timeArrayRef = useRef<Float32Array | null>(null)
 
   const loop = useCallback(function loop(): void {
-    if (!analyserRef.current || !dataArrayRef.current) return
-    analyserRef.current.getFloatFrequencyData(dataArrayRef.current)
-    setFrequencyData(new Float32Array(dataArrayRef.current))
+    if (!analyserRef.current || !freqArrayRef.current || !timeArrayRef.current) return
+    analyserRef.current.getFloatFrequencyData(freqArrayRef.current)
+    analyserRef.current.getFloatTimeDomainData(timeArrayRef.current)
+    setFrequencyData(new Float32Array(freqArrayRef.current))
+    setTimeDomainData(new Float32Array(timeArrayRef.current))
     rafRef.current = requestAnimationFrame(loop)
   }, [])
 
@@ -44,13 +49,17 @@ export function useAudioAnalyzer(): AudioAnalyzerState {
     streamRef.current = null
     setIsRunning(false)
     setFrequencyData(null)
+    setTimeDomainData(null)
   }, [])
 
   const start = useCallback(async () => {
     if (contextRef.current !== null) return
     setError(null)
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+        video: false,
+      })
       streamRef.current = stream
 
       const context = new AudioContext({ sampleRate: 44100 })
@@ -67,7 +76,8 @@ export function useAudioAnalyzer(): AudioAnalyzerState {
       const source = context.createMediaStreamSource(stream)
       source.connect(analyser)
 
-      dataArrayRef.current = new Float32Array(analyser.frequencyBinCount)
+      freqArrayRef.current = new Float32Array(analyser.frequencyBinCount)
+      timeArrayRef.current = new Float32Array(analyser.fftSize)
       setIsRunning(true)
       rafRef.current = requestAnimationFrame(loop)
     } catch (err) {
@@ -100,5 +110,5 @@ export function useAudioAnalyzer(): AudioAnalyzerState {
 
   useEffect(() => () => stop(), [stop])
 
-  return { frequencyData, isRunning, error, start, stop }
+  return { frequencyData, timeDomainData, isRunning, error, start, stop }
 }

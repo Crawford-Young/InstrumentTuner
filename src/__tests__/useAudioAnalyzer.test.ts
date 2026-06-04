@@ -4,11 +4,12 @@ import { useAudioAnalyzer } from '@/hooks/useAudioAnalyzer'
 import { mockAudioContext, mockMediaStream } from '@/test/setup'
 
 describe('useAudioAnalyzer', () => {
-  it('starts with isRunning false and no error', () => {
+  it('starts with isRunning false, no error, and null data', () => {
     const { result } = renderHook(() => useAudioAnalyzer())
     expect(result.current.isRunning).toBe(false)
     expect(result.current.error).toBeNull()
     expect(result.current.frequencyData).toBeNull()
+    expect(result.current.timeDomainData).toBeNull()
   })
 
   it('sets isRunning true after start()', async () => {
@@ -17,11 +18,11 @@ describe('useAudioAnalyzer', () => {
     expect(result.current.isRunning).toBe(true)
   })
 
-  it('calls getUserMedia with audio constraints', async () => {
+  it('calls getUserMedia with raw audio constraints (no browser DSP)', async () => {
     const { result } = renderHook(() => useAudioAnalyzer())
     await act(async () => { await result.current.start() })
     expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalledWith({
-      audio: true,
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
       video: false,
     })
   })
@@ -56,12 +57,13 @@ describe('useAudioAnalyzer', () => {
     expect(result.current.error).toBe('suspended')
   })
 
-  it('sets isRunning false and frequencyData null after stop()', async () => {
+  it('sets isRunning false, frequencyData null, and timeDomainData null after stop()', async () => {
     const { result } = renderHook(() => useAudioAnalyzer())
     await act(async () => { await result.current.start() })
     act(() => { result.current.stop() })
     expect(result.current.isRunning).toBe(false)
     expect(result.current.frequencyData).toBeNull()
+    expect(result.current.timeDomainData).toBeNull()
   })
 
   it('stops all tracks on stop()', async () => {
@@ -116,7 +118,7 @@ describe('useAudioAnalyzer', () => {
     ;(mockAudioContext as { state: AudioContextState }).state = originalState
   })
 
-  it('loop fills frequencyData when refs are populated', async () => {
+  it('loop fills frequencyData and timeDomainData when refs are populated', async () => {
     let capturedCallback: FrameRequestCallback | null = null
     ;(global.requestAnimationFrame as ReturnType<typeof vi.fn>).mockImplementationOnce(
       (cb: FrameRequestCallback) => { capturedCallback = cb; return 1 },
@@ -127,6 +129,7 @@ describe('useAudioAnalyzer', () => {
     ;(global.requestAnimationFrame as ReturnType<typeof vi.fn>).mockImplementationOnce(() => 2)
     act(() => { capturedCallback?.(0) })
     expect(result.current.frequencyData).not.toBeNull()
+    expect(result.current.timeDomainData).not.toBeNull()
   })
 
   it('loop returns early when analyserRef is null', async () => {
@@ -142,8 +145,9 @@ describe('useAudioAnalyzer', () => {
     // capturedCallback is the loop function; calling it with null refs should be a no-op
     ;(global.requestAnimationFrame as ReturnType<typeof vi.fn>).mockImplementationOnce(() => 2)
     act(() => { capturedCallback?.(0) })
-    // After the early return the state should remain null (no setFrequencyData call)
+    // After the early return the state should remain null (no setFrequencyData/setTimeDomainData call)
     expect(result.current.frequencyData).toBeNull()
+    expect(result.current.timeDomainData).toBeNull()
   })
 
   it('visibilitychange hides tab: cancels rAF when rafRef is set', async () => {

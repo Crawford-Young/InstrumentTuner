@@ -2,10 +2,11 @@ import { describe, it, expect } from 'vitest'
 import { INSTRUMENTS, detectClosestString } from '@/lib/instruments'
 
 describe('INSTRUMENTS config', () => {
-  it('includes Guitar and Ukulele', () => {
+  it('includes Guitar, Ukulele, and Bb Trumpet', () => {
     const ids = INSTRUMENTS.map((i) => i.id)
     expect(ids).toContain('guitar')
     expect(ids).toContain('ukulele')
+    expect(ids).toContain('bb-trumpet')
   })
 
   it('Guitar has 6 strings', () => {
@@ -16,6 +17,17 @@ describe('INSTRUMENTS config', () => {
   it('Ukulele has 4 strings', () => {
     const uke = INSTRUMENTS.find((i) => i.id === 'ukulele')!
     expect(uke.strings).toHaveLength(4)
+  })
+
+  it('Bb Trumpet has 8 notes', () => {
+    const trumpet = INSTRUMENTS.find((i) => i.id === 'bb-trumpet')!
+    expect(trumpet.strings).toHaveLength(8)
+  })
+
+  it('Bb Trumpet written C4 maps to concert Bb3 (233.08 Hz)', () => {
+    const trumpet = INSTRUMENTS.find((i) => i.id === 'bb-trumpet')!
+    const c4 = trumpet.strings.find((s) => s.name === 'C4')
+    expect(c4?.frequency).toBe(233.08)
   })
 
   it('all strings have positive frequency', () => {
