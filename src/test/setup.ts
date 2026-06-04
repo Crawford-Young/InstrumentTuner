@@ -4,12 +4,14 @@ import { vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom'
 
 const mockGetFloatFrequencyData = vi.fn((array: Float32Array) => array.fill(-100))
+const mockGetFloatTimeDomainData = vi.fn((array: Float32Array) => array.fill(0))
 const mockConnect = vi.fn()
 
 export const mockAnalyserNode = {
   fftSize: 32768,
   get frequencyBinCount() { return this.fftSize / 2 },
   getFloatFrequencyData: mockGetFloatFrequencyData,
+  getFloatTimeDomainData: mockGetFloatTimeDomainData,
   connect: mockConnect,
 }
 
@@ -43,6 +45,7 @@ Object.defineProperty(global.navigator, 'mediaDevices', {
 beforeEach(() => {
   vi.clearAllMocks()
   mockGetFloatFrequencyData.mockImplementation((array: Float32Array) => array.fill(-100))
+  mockGetFloatTimeDomainData.mockImplementation((array: Float32Array) => array.fill(0))
   ;(global.navigator.mediaDevices.getUserMedia as ReturnType<typeof vi.fn>)
     .mockResolvedValue(mockMediaStream)
 })

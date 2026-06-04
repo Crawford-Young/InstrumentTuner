@@ -3,18 +3,17 @@ import { renderHook } from '@testing-library/react'
 import { usePitchDetector } from '@/hooks/usePitchDetector'
 
 const SAMPLE_RATE = 44100
-const FFT_SIZE = 32768
-const BIN_WIDTH = SAMPLE_RATE / FFT_SIZE // ~1.346 Hz per bin
 
-function makeFftData(peakFreqHz: number): Float32Array {
-  const data = new Float32Array(FFT_SIZE / 2).fill(-100)
-  const peakBin = Math.round(peakFreqHz / BIN_WIDTH)
-  data[peakBin] = -10 // strong signal at this bin
-  return data
+function makeSine(freq: number, samples: number, amplitude = 0.8): Float32Array {
+  const buf = new Float32Array(samples)
+  for (let i = 0; i < samples; i++) {
+    buf[i] = amplitude * Math.sin((2 * Math.PI * freq * i) / SAMPLE_RATE)
+  }
+  return buf
 }
 
 describe('usePitchDetector', () => {
-  it('returns null values when frequencyData is null', () => {
+  it('returns null values when timeDomainData is null', () => {
     const { result } = renderHook(() => usePitchDetector(null))
     expect(result.current.detectedFreq).toBeNull()
     expect(result.current.closestNote).toBeNull()
@@ -22,72 +21,76 @@ describe('usePitchDetector', () => {
     expect(result.current.centsDeviation(440)).toBeNull()
   })
 
-  it('returns null values when all bins are silent (-100 dB)', () => {
-    const silent = new Float32Array(16384).fill(-100)
+  it('returns null values for silence (all zeros)', () => {
+    const silent = new Float32Array(8192)
     const { result } = renderHook(() => usePitchDetector(silent))
-    expect(result.current.detectedFreq).toBeNull()
-  })
-
-  it('detects A4 (440 Hz) from synthetic FFT data', () => {
-    const data = makeFftData(440)
-    const { result } = renderHook(() => usePitchDetector(data))
-    expect(result.current.closestNote).toBe('A4')
-    expect(result.current.detectedFreq).toBeCloseTo(440, 0)
-  })
-
-  it('detects E2 (82.41 Hz) from synthetic FFT data', () => {
-    const data = makeFftData(82.41)
-    const { result } = renderHook(() => usePitchDetector(data))
-    expect(result.current.closestNote).toBe('E2')
-  })
-
-  it('suppresses mains hum — bins below 62 Hz ignored', () => {
-    const data = new Float32Array(16384).fill(-100)
-    // Place a very strong signal at ~50 Hz (mains hum range)
-    const humBin = Math.round(50 / BIN_WIDTH)
-    data[humBin] = 0 // max signal
-    // Also place a weaker but above-threshold signal at A4
-    const a4Bin = Math.round(440 / BIN_WIDTH)
-    data[a4Bin] = -10
-    const { result } = renderHook(() => usePitchDetector(data))
-    // Hum suppressed, should detect A4 not ~50 Hz
-    expect(result.current.closestNote).toBe('A4')
-  })
-
-  it('returns centsDeviation function that calculates correctly', () => {
-    const data = makeFftData(440)
-    const { result } = renderHook(() => usePitchDetector(data))
-    const cents = result.current.centsDeviation(440)
-    expect(cents).toBeCloseTo(0, 0)
-  })
-
-  it('centsDeviation returns negative cents when detected is flat', () => {
-    const data = makeFftData(430)
-    const { result } = renderHook(() => usePitchDetector(data))
-    const cents = result.current.centsDeviation(440)
-    expect(cents).toBeLessThan(0)
-  })
-
-  it('centsDeviation returns positive cents when detected is sharp', () => {
-    const data = makeFftData(450)
-    const { result } = renderHook(() => usePitchDetector(data))
-    const cents = result.current.centsDeviation(440)
-    expect(cents).toBeGreaterThan(0)
-  })
-
-  it('returns null when peak is at bin 0 (detectedFreq would be <= 0)', () => {
-    const data = new Float32Array(16384).fill(-100)
-    // Place signal at bin 0 — this is a physical impossibility in real audio
-    // but we test the guard anyway for completeness
-    data[0] = -10
-    const { result } = renderHook(() => usePitchDetector(data))
     expect(result.current.detectedFreq).toBeNull()
     expect(result.current.closestNote).toBeNull()
   })
 
+  it('returns null for buffer too short to analyse', () => {
+    const { result } = renderHook(() => usePitchDetector(new Float32Array(200).fill(0.5)))
+    expect(result.current.detectedFreq).toBeNull()
+  })
+
+  it('detects A4 (440 Hz)', () => {
+    const { result } = renderHook(() => usePitchDetector(makeSine(440, 8192)))
+    expect(result.current.closestNote).toBe('A4')
+    expect(result.current.detectedFreq).toBeCloseTo(440, 0)
+  })
+
+  it('detects E2 (82.41 Hz) — guitar low E', () => {
+    const { result } = renderHook(() => usePitchDetector(makeSine(82.41, 8192)))
+    expect(result.current.closestNote).toBe('E2')
+  })
+
+  it('detects E4 (329.63 Hz) — guitar high E', () => {
+    const { result } = renderHook(() => usePitchDetector(makeSine(329.63, 8192)))
+    expect(result.current.closestNote).toBe('E4')
+  })
+
+  it('detects Bb3 (233.08 Hz) — Bb trumpet written C', () => {
+    const { result } = renderHook(() => usePitchDetector(makeSine(233.08, 8192)))
+    expect(result.current.closestNote).toBe('A#3')
+  })
+
+  it('centsDeviation returns ~0 when detected matches target', () => {
+    const { result } = renderHook(() => usePitchDetector(makeSine(440, 8192)))
+    expect(result.current.centsDeviation(440)).toBeCloseTo(0, 0)
+  })
+
+  it('centsDeviation returns negative when detected is flat', () => {
+    const { result } = renderHook(() => usePitchDetector(makeSine(430, 8192)))
+    expect(result.current.centsDeviation(440)).toBeLessThan(0)
+  })
+
+  it('centsDeviation returns positive when detected is sharp', () => {
+    const { result } = renderHook(() => usePitchDetector(makeSine(450, 8192)))
+    expect(result.current.centsDeviation(440)).toBeGreaterThan(0)
+  })
+
   it('includes closestPitch in result', () => {
-    const data = makeFftData(440)
-    const { result } = renderHook(() => usePitchDetector(data))
+    const { result } = renderHook(() => usePitchDetector(makeSine(440, 8192)))
     expect(result.current.closestPitch).toBeCloseTo(440, 1)
+  })
+
+  it('accumulates history and stays on same note across frames, evicting oldest beyond HISTORY_SIZE', () => {
+    const { result, rerender } = renderHook(
+      ({ data }: { data: Float32Array }) => usePitchDetector(data),
+      { initialProps: { data: makeSine(440, 8192) } },
+    )
+    // 9 renders — exceeds HISTORY_SIZE=7, exercises the shift() eviction path
+    for (let i = 0; i < 8; i++) rerender({ data: makeSine(440, 8192) })
+    expect(result.current.closestNote).toBe('A4')
+  })
+
+  it('resets history on large pitch jump — responds immediately to new note', () => {
+    const { result, rerender } = renderHook(
+      ({ data }: { data: Float32Array }) => usePitchDetector(data),
+      { initialProps: { data: makeSine(82.41, 8192) } },
+    )
+    expect(result.current.closestNote).toBe('E2')
+    rerender({ data: makeSine(440, 8192) })
+    expect(result.current.closestNote).toBe('A4')
   })
 })

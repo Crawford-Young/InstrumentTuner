@@ -1,5 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import { findClosestNote, centDeviation, CONCERT_PITCH, ALL_NOTES } from '@/lib/pitch'
+import { findClosestNote, centDeviation, detectPitchYIN, CONCERT_PITCH, ALL_NOTES } from '@/lib/pitch'
+
+const SAMPLE_RATE = 44100
+
+function makeSine(freq: number, samples: number, amplitude = 0.8): Float32Array {
+  const buf = new Float32Array(samples)
+  for (let i = 0; i < samples; i++) {
+    buf[i] = amplitude * Math.sin((2 * Math.PI * freq * i) / SAMPLE_RATE)
+  }
+  return buf
+}
 
 describe('findClosestNote', () => {
   it('identifies A4 at concert pitch', () => {
@@ -80,5 +90,51 @@ describe('constants', () => {
 
   it('ALL_NOTES starts with A', () => {
     expect(ALL_NOTES[0]).toBe('A')
+  })
+})
+
+describe('detectPitchYIN', () => {
+  it('returns null for silence (all zeros)', () => {
+    expect(detectPitchYIN(new Float32Array(8192), SAMPLE_RATE)).toBeNull()
+  })
+
+  it('returns null when buffer too short', () => {
+    expect(detectPitchYIN(new Float32Array(100).fill(0.5), SAMPLE_RATE)).toBeNull()
+  })
+
+  it('detects A4 (440 Hz)', () => {
+    const freq = detectPitchYIN(makeSine(440, 8192), SAMPLE_RATE)
+    expect(freq).not.toBeNull()
+    expect(freq!).toBeCloseTo(440, 0)
+  })
+
+  it('detects E2 (82.41 Hz) — guitar low E, fundamental is often weakest harmonic', () => {
+    const freq = detectPitchYIN(makeSine(82.41, 8192), SAMPLE_RATE)
+    expect(freq).not.toBeNull()
+    expect(freq!).toBeCloseTo(82.41, 0)
+  })
+
+  it('detects E4 (329.63 Hz) — guitar high E', () => {
+    const freq = detectPitchYIN(makeSine(329.63, 8192), SAMPLE_RATE)
+    expect(freq).not.toBeNull()
+    expect(freq!).toBeCloseTo(329.63, 0)
+  })
+
+  it('detects Bb3 (233.08 Hz) — Bb trumpet written C', () => {
+    const freq = detectPitchYIN(makeSine(233.08, 8192), SAMPLE_RATE)
+    expect(freq).not.toBeNull()
+    expect(freq!).toBeCloseTo(233.08, 0)
+  })
+
+  it('rejects 60 Hz mains hum (below MIN_PITCH_HZ = 65)', () => {
+    expect(detectPitchYIN(makeSine(60, 8192), SAMPLE_RATE)).toBeNull()
+  })
+
+  it('returns null for constant non-zero signal (DC) — no periodicity', () => {
+    expect(detectPitchYIN(new Float32Array(8192).fill(0.5), SAMPLE_RATE)).toBeNull()
+  })
+
+  it('returns null for quiet signal below RMS threshold', () => {
+    expect(detectPitchYIN(makeSine(440, 8192, 0.005), SAMPLE_RATE)).toBeNull()
   })
 })
