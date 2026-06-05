@@ -150,9 +150,7 @@ export default function Home() {
               </p>
               <p className="font-mono text-[11px] tabular-nums text-muted-foreground/60">
                 Detected{' '}
-                {closestNote && detectedFreq
-                  ? `${closestNote} · ${detectedFreq.toFixed(1)} Hz`
-                  : '—'}
+                {detectedFreq ? `${detectedFreq.toFixed(1)} Hz` : '—'}
               </p>
             </div>
 

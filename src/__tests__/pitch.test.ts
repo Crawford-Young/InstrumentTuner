@@ -156,5 +156,20 @@ describe('detectPitchYIN', () => {
     const freq = detectPitchYIN(makeSine(440, 8192), SAMPLE_RATE, 220)
     expect(freq).toBeCloseTo(220, 0)
   })
+
+  it('octave correction: prefers lower candidate when it is ≥2× better quality', () => {
+    // Simulate brass instrument: mix a dominant 2nd partial (880 Hz) with a weaker
+    // fundamental (440 Hz). The 2nd partial creates a tau≈50 candidate; the
+    // fundamental tau≈100 has lower CMNDF and should win via octave correction.
+    const buf = new Float32Array(8192)
+    for (let i = 0; i < buf.length; i++) {
+      buf[i] = 0.05 * Math.sin(2 * Math.PI * 440 * i / SAMPLE_RATE)   // weak fundamental
+             + 0.8  * Math.sin(2 * Math.PI * 880 * i / SAMPLE_RATE)   // dominant 2nd partial
+    }
+    const freq = detectPitchYIN(buf, SAMPLE_RATE)
+    // Should detect the fundamental (440 Hz), not the 2nd partial (880 Hz)
+    expect(freq).not.toBeNull()
+    expect(freq!).toBeCloseTo(440, 0)
+  })
 })
 

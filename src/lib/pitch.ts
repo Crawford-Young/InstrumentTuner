@@ -81,10 +81,20 @@ export function detectPitchYIN(
 
   if (candidates.length === 0) return null
 
-  // Without a previous frequency: take the smallest-tau candidate (= fundamental, standard YIN).
-  // CMNDF values at subharmonic taus can be numerically lower due to better integer-sample
-  // alignment at n*T — quality-only scoring would wrongly prefer them.
-  if (prevFreq === null) return sampleRate / candidates[0].refinedTau
+  // Without a previous frequency: start from the smallest-tau candidate (standard YIN),
+  // then apply octave correction. Brass/strings have a strong 2nd partial whose
+  // tau ≈ T0/2 can dip below threshold — the fundamental (tau ≈ T0) always has
+  // better CMNDF quality. If an octave-lower candidate is ≥2× better, prefer it.
+  if (prevFreq === null) {
+    const first = candidates[0]
+    for (const cand of candidates.slice(1)) {
+      const ratio = cand.refinedTau / first.refinedTau
+      if (ratio > 1.7 && ratio < 2.3 && cand.val < first.val * 0.5) {
+        return sampleRate / cand.refinedTau
+      }
+    }
+    return sampleRate / first.refinedTau
+  }
 
   const fundamentalFreq = sampleRate / candidates[0].refinedTau
   const jumpCents = Math.abs(1200 * Math.log2(fundamentalFreq / prevFreq))
