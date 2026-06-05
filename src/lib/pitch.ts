@@ -33,9 +33,13 @@ export function detectPitchYIN(
 
   if (buffer.length < ANALYSIS_SAMPLES + maxLag) return null
 
-  // Silence gate
+  // Analyse the NEWEST samples — index 0 is oldest, buffer.length-1 is newest.
+  // Without this offset we'd analyse audio from ~fftSize/sampleRate seconds ago.
+  const offset = buffer.length - ANALYSIS_SAMPLES - maxLag
+
+  // Silence gate on the samples we actually analyse
   let rms = 0
-  for (let i = 0; i < ANALYSIS_SAMPLES; i++) rms += buffer[i] * buffer[i]
+  for (let i = 0; i < ANALYSIS_SAMPLES; i++) rms += buffer[offset + i] * buffer[offset + i]
   if (Math.sqrt(rms / ANALYSIS_SAMPLES) < RMS_THRESHOLD) return null
 
   // Difference function + CMNDF in one pass.
@@ -47,7 +51,7 @@ export function detectPitchYIN(
   for (let tau = 1; tau <= maxLag; tau++) {
     let diff = 0
     for (let i = 0; i < ANALYSIS_SAMPLES; i++) {
-      const delta = buffer[i] - buffer[i + tau]
+      const delta = buffer[offset + i] - buffer[offset + i + tau]
       diff += delta * delta
     }
     runningSum += diff

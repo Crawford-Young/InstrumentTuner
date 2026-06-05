@@ -13,7 +13,7 @@ export interface AudioAnalyzerState {
   readonly stop: () => void
 }
 
-const FFT_SIZE = 32768
+const FFT_SIZE = 8192
 
 export function useAudioAnalyzer(): AudioAnalyzerState {
   const [isRunning, setIsRunning] = useState(false)

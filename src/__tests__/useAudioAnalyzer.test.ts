@@ -33,7 +33,7 @@ describe('useAudioAnalyzer', () => {
     expect(AudioContext).toHaveBeenCalledWith({ sampleRate: 44100 })
   })
 
-  it('creates AnalyserNode and sets fftSize to 32768', async () => {
+  it('creates AnalyserNode and sets fftSize', async () => {
     const { result } = renderHook(() => useAudioAnalyzer())
     await act(async () => { await result.current.start() })
     expect(mockAudioContext.createAnalyser).toHaveBeenCalled()
