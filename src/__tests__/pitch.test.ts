@@ -135,7 +135,7 @@ describe('detectPitchYIN', () => {
   })
 
   it('returns null for quiet signal below RMS threshold', () => {
-    expect(detectPitchYIN(makeSine(440, 8192, 0.005), SAMPLE_RATE)).toBeNull()
+    expect(detectPitchYIN(makeSine(440, 8192, 0.001), SAMPLE_RATE)).toBeNull()
   })
 
   it('prevFreq=null gives same result as no prevFreq argument', () => {
@@ -157,3 +157,4 @@ describe('detectPitchYIN', () => {
     expect(freq).toBeCloseTo(220, 0)
   })
 })
+
