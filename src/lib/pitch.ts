@@ -1,6 +1,6 @@
-const YIN_THRESHOLD = 0.20
-const RMS_THRESHOLD = 0.003
-const ANALYSIS_SAMPLES = 4096  // ~93ms at 44100 Hz — ~7 periods of guitar E2
+const YIN_THRESHOLD = 0.25
+const RMS_THRESHOLD = 0.001
+const ANALYSIS_SAMPLES = 6000  // ~136ms at 44100 Hz — ~11 periods of guitar E2
 const MIN_PITCH_HZ = 65
 const MAX_PITCH_HZ = 2000
 
