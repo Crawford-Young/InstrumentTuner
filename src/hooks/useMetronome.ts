@@ -1,28 +1,17 @@
 'use client'
 
 import { useCallback, useRef, useState } from 'react'
+import { scheduleClick } from '@/lib/audio/click'
+import { averageBpmFromTaps } from '@/lib/tempo'
 
 const LOOKAHEAD_MS = 25
 const SCHEDULE_AHEAD_SEC = 0.1
-const CLICK_DURATION_SEC = 0.05
 const TAP_TIMEOUT_MS = 2000
 const MAX_TAP_COUNT = 5
 const MIN_BPM = 40
 const MAX_BPM = 240
 const DEFAULT_BPM = 120
 const DEFAULT_BEATS = 4
-
-function scheduleClick(ctx: AudioContext, time: number, isAccent: boolean): void {
-  const osc = ctx.createOscillator()
-  const gain = ctx.createGain()
-  osc.connect(gain)
-  gain.connect(ctx.destination)
-  osc.frequency.value = isAccent ? 1200 : 800
-  gain.gain.setValueAtTime(isAccent ? 1.0 : 0.5, time)
-  gain.gain.exponentialRampToValueAtTime(0.001, time + CLICK_DURATION_SEC)
-  osc.start(time)
-  osc.stop(time + CLICK_DURATION_SEC)
-}
 
 export interface MetronomeState {
   readonly isPlaying: boolean
@@ -114,11 +103,8 @@ export function useMetronome(): MetronomeState {
     tapTimestampsRef.current = taps
 
     if (taps.length < 2) return
-
-    const intervals: number[] = []
-    for (let i = 1; i < taps.length; i++) intervals.push(taps[i] - taps[i - 1])
-    const avg = intervals.reduce((a, b) => a + b, 0) / intervals.length
-    setBpm(Math.round(60000 / avg))
+    const bpm = averageBpmFromTaps(taps)
+    if (bpm !== null) setBpm(bpm)
   }, [setBpm])
 
   return { isPlaying, bpm, beatsPerMeasure, currentBeat, setBpm, setBeatsPerMeasure, start, stop, tapTempo }
