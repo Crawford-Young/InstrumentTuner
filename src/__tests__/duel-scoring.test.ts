@@ -52,11 +52,13 @@ describe('resolveRound', () => {
   })
 
   it('player 2 can win', () => {
-    const { result } = resolveRound({
+    const { players, result } = resolveRound({
       target: 100, p1Answer: 130, p2Answer: 105, players: pair(),
     })
     expect(result.winner).toBe(1)
     expect(result.damage).toBe(25)
+    expect(players[1]).toEqual({ hp: STARTING_HP, wins: 1, multiplier: 2 })
+    expect(players[0].hp).toBe(STARTING_HP - 25)
   })
 
   it('tie is a wash: no damage, no win/multiplier change', () => {
@@ -89,6 +91,18 @@ describe('resolveRound', () => {
     ]
     const { players, result } = resolveRound({
       target: 40, p1Answer: 40, p2Answer: 200, players: start,
+    })
+    expect(players[1].hp).toBe(0)
+    expect(result.defeated).toBe(true)
+  })
+
+  it('HP clamp floors a would-be-negative result', () => {
+    const start: readonly [DuelPlayer, DuelPlayer] = [
+      { hp: 160, wins: 0, multiplier: 1 },
+      { hp: 10, wins: 0, multiplier: 1 },
+    ]
+    const { players, result } = resolveRound({
+      target: 120, p1Answer: 120, p2Answer: 150, players: start,
     })
     expect(players[1].hp).toBe(0)
     expect(result.defeated).toBe(true)
