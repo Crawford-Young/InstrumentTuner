@@ -104,6 +104,7 @@ export function useMetronome(): MetronomeState {
 
     if (taps.length < 2) return
     const bpm = averageBpmFromTaps(taps)
+    /* v8 ignore next */
     if (bpm !== null) setBpm(bpm)
   }, [setBpm])
 

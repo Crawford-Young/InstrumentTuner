@@ -27,6 +27,14 @@ describe('useTapTempo', () => {
     expect(onComplete).toHaveBeenCalledWith(120) // 500ms intervals -> 120 bpm
   })
 
+  it('does not call onComplete when single tap yields null bpm (requiredTaps: 1)', () => {
+    const onComplete = vi.fn()
+    const { result } = renderHook(() => useTapTempo({ requiredTaps: 1, onComplete }))
+    act(() => { vi.setSystemTime(0); result.current.tap() })
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(result.current.tapCount).toBe(1)
+  })
+
   it('reset clears tap count', () => {
     const { result } = renderHook(() => useTapTempo({ requiredTaps: 4, onComplete: vi.fn() }))
     act(() => { vi.setSystemTime(0); result.current.tap() })
