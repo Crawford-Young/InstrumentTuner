@@ -56,4 +56,28 @@ describe('DuelTurn', () => {
     await userEvent.click(screen.getByRole('button', { name: /tap/i }))
     expect(onSubmit).toHaveBeenCalledWith(118)
   })
+
+  it('guess mode: Listen button calls playback.play, shows replay countdown, then disables', async () => {
+    const play = vi.fn()
+    const fakeUseTempoPlayback = () => ({ play })
+    render(
+      <DuelTurn
+        player="P1"
+        mode="guess"
+        target={150}
+        onSubmit={vi.fn()}
+        useTempoPlaybackImpl={fakeUseTempoPlayback}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: /ready/i }))
+
+    // First click: spy called with correct args, label updates to "(1 left)"
+    await userEvent.click(screen.getByRole('button', { name: /listen/i }))
+    expect(play).toHaveBeenCalledWith(150, 8)
+    expect(screen.getByRole('button', { name: /1 left/i })).toBeInTheDocument()
+
+    // Second click: replaysLeft reaches 0, button becomes disabled
+    await userEvent.click(screen.getByRole('button', { name: /1 left/i }))
+    expect(screen.getByRole('button', { name: /listen/i })).toBeDisabled()
+  })
 })
