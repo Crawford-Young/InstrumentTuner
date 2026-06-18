@@ -36,7 +36,6 @@ const SETUP_STATE: DuelState = {
 }
 
 export function duelReducer(state: DuelState, action: Action): DuelState {
-  /* v8 ignore next */
   switch (action.type) {
     case 'START_MATCH':
       return freshMatch(action.mode, action.target)

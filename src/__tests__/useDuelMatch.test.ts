@@ -1,7 +1,7 @@
 // src/__tests__/useDuelMatch.test.ts
 import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useDuelMatch } from '@/hooks/useDuelMatch'
+import { useDuelMatch, duelReducer } from '@/hooks/useDuelMatch'
 import { STARTING_HP } from '@/lib/duel/types'
 
 // Deterministic RNG: always midpoint -> target 120
@@ -100,5 +100,11 @@ describe('useDuelMatch', () => {
     expect(result.current.state.players[0].hp).toBe(STARTING_HP)
     expect(result.current.state.players[1].hp).toBe(STARTING_HP)
     expect(result.current.state.phase).toBe('p1-turn')
+  })
+
+  it('reducer default arm returns the same state reference for unknown action types', () => {
+    const { result } = renderHook(() => useDuelMatch(rng))
+    const state = result.current.state
+    expect(duelReducer(state, { type: 'UNKNOWN' } as never)).toBe(state)
   })
 })
