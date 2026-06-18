@@ -7,6 +7,7 @@ import { useMetronome } from '@/hooks/useMetronome'
 import { TunerGauge } from '@/components/TunerGauge'
 import { StringSelector } from '@/components/StringSelector'
 import { MetronomeBeat } from '@/components/MetronomeBeat'
+import { DuelPanel } from '@/components/duel/DuelPanel'
 import { INSTRUMENTS, detectClosestString, type Instrument } from '@/lib/instruments'
 import {
   Button,
@@ -23,7 +24,7 @@ import {
   AlertDescription,
 } from '@/lib/ui'
 
-type Mode = 'tuner' | 'note-detector' | 'metronome'
+type Mode = 'tuner' | 'note-detector' | 'metronome' | 'duel'
 
 const MAX_NEEDLE_CENTS = 50
 const BEATS_OPTIONS = [2, 3, 4] as const
@@ -107,6 +108,9 @@ export default function Home() {
             </TabsTrigger>
             <TabsTrigger value="metronome" variant="pills" className={triggerCls}>
               Metronome
+            </TabsTrigger>
+            <TabsTrigger value="duel" variant="pills" className={triggerCls}>
+              Duel
             </TabsTrigger>
           </TabsList>
         </div>
@@ -339,6 +343,13 @@ export default function Home() {
                 </Button>
               </div>
             </div>
+          </div>
+        </TabsContent>
+
+        {/* Duel */}
+        <TabsContent value="duel" className="flex-1 mt-0">
+          <div className="flex min-h-[calc(100vh-57px)] flex-col items-center justify-center px-6 py-8">
+            <DuelPanel />
           </div>
         </TabsContent>
       </Tabs>
