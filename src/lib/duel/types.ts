@@ -21,7 +21,9 @@ export interface RoundResult {
   readonly p1Distance: number
   readonly p2Distance: number
   readonly winner: PlayerIndex | null // null = tie
-  readonly damage: number
+  readonly gap: number // loserDistance - winnerDistance (0 on tie)
+  readonly multiplier: number // winner's multiplier applied to damage (0 on tie)
+  readonly damage: number // gap * multiplier
   readonly defeated: boolean
 }
 
