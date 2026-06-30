@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Instrument Tuner
+
+A real-time, browser-based chromatic tuner and practice tool. Built with Next.js (App Router), TypeScript, and the `@crawfordyoung/ui` component library. Dark-mode-first; 100% test coverage; Lighthouse a11y/SEO/best-practices at 100.
+
+## Modes
+
+The app is a four-tab single page (`src/app/page.tsx`):
+
+- **Tuner** — chromatic pitch detection against guitar/ukulele string targets, with a live needle gauge and auto string detection.
+- **Note Detector** — raw closest-note + frequency readout from the mic signal.
+- **Metronome** — BPM display, slider (40–240), tap tempo, selectable time signature (2/4, 3/4, 4/4), and a visual beat indicator.
+- **Duel** — local hot-seat PvP tempo game. Two players take turns matching or guessing a target tempo (tap or guess mode); a scoring engine awards damage with a streak multiplier, and a health-bar match runs to victory.
+
+Mic-based modes require microphone permission.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Dev server (Turbopack) |
+| `pnpm build` | Production build |
+| `pnpm start` | Serve the production build |
+| `pnpm test` | Vitest + coverage (100% gate) |
+| `pnpm e2e` | Playwright E2E (boots `pnpm dev` on port 3002) |
+| `pnpm lint` | ESLint |
+| `pnpm typecheck` | `tsc --noEmit` |
 
-## Learn More
+`node axe-duel.mjs` runs an axe-core accessibility sweep over the Duel flow in dark and light mode against a server on `:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+## Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Pure logic** lives in `src/lib/` (`tempo.ts`, `duel/scoring.ts`, `duel/types.ts`, `audio/click.ts`) — framework-free and unit-tested in isolation.
+- **Hooks** in `src/hooks/` (`useMetronome`, `useDuelMatch`, `useTapTempo`, `useTempoPlayback`, `useAudioAnalyzer`, `usePitchDetector`) hold stateful behavior.
+- **Components** in `src/components/` compose the UI; `src/components/duel/` holds the Duel feature set.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploys to Vercel as a static-first Next.js app.
