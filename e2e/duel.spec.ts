@@ -8,7 +8,7 @@ test('tap duel runs from setup into a turn', async ({ page }) => {
   await page.getByRole('button', { name: /start match/i }).click()
 
   // P1 privacy gate
-  await expect(page.getByText(/P1 's turn/i)).toBeVisible()
+  await expect(page.getByText(/P1's turn/i)).toBeVisible()
   await page.getByRole('button', { name: /ready/i }).click()
 
   // Tap four times to submit a tempo
@@ -19,5 +19,5 @@ test('tap duel runs from setup into a turn', async ({ page }) => {
   }
 
   // Advances to P2's turn
-  await expect(page.getByText(/P2 's turn/i)).toBeVisible()
+  await expect(page.getByText(/P2's turn/i)).toBeVisible()
 })
