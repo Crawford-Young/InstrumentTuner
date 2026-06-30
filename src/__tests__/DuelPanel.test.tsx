@@ -12,6 +12,6 @@ describe('DuelPanel', () => {
   it('flows setup -> p1 turn after starting a tap match', async () => {
     render(<DuelPanel />)
     await userEvent.click(screen.getByRole('button', { name: /start match/i }))
-    expect(screen.getByText(/P1 's turn/i)).toBeInTheDocument()
+    expect(screen.getByText(/P1's turn/i)).toBeInTheDocument()
   })
 })

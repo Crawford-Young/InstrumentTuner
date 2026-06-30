@@ -6,7 +6,7 @@ import { DuelTurn } from '@/components/duel/DuelTurn'
 describe('DuelTurn', () => {
   it('shows privacy gate first, hides the challenge', () => {
     render(<DuelTurn player="P1" mode="tap" target={120} onSubmit={vi.fn()} />)
-    expect(screen.getByText(/P1 's turn/i)).toBeInTheDocument()
+    expect(screen.getByText(/P1's turn/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /ready/i })).toBeInTheDocument()
     expect(screen.queryByText('120')).not.toBeInTheDocument()
   })
