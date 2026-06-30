@@ -17,15 +17,14 @@ export function DuelHud({ players, activePlayer, startingHp }: DuelHudProps) {
     <div className="flex w-full max-w-sm items-center gap-4">
       {players.map((player, i) => {
         const isActive = activePlayer === i
-        const dimmed = activePlayer !== null && !isActive
         return (
           <div
             key={LABELS[i]}
             data-testid={`hud-player-${i}`}
             data-active={isActive}
             className={`flex flex-1 items-center gap-2 rounded-lg p-2 transition-all ${
-              isActive ? 'ring-1 ring-accent' : ''
-            } ${dimmed ? 'opacity-50' : ''}`}
+              isActive ? 'ring-1 ring-accent' : 'ring-1 ring-transparent'
+            }`}
           >
             <HealthBar label={LABELS[i]} hp={player.hp} maxHp={startingHp} />
             <MultiplierBadge multiplier={player.multiplier} />

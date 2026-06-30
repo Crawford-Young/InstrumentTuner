@@ -19,17 +19,18 @@ describe('DuelHud', () => {
     expect(screen.getByText('×3')).toBeInTheDocument()
   })
 
-  it('marks the active player and dims the other', () => {
+  it('rings the active player and not the other', () => {
     render(<DuelHud players={players} activePlayer={1} startingHp={STARTING_HP} />)
     expect(screen.getByTestId('hud-player-1')).toHaveAttribute('data-active', 'true')
+    expect(screen.getByTestId('hud-player-1').className).toContain('ring-accent')
     expect(screen.getByTestId('hud-player-0')).toHaveAttribute('data-active', 'false')
-    expect(screen.getByTestId('hud-player-0').className).toContain('opacity-50')
+    expect(screen.getByTestId('hud-player-0').className).not.toContain('ring-accent')
   })
 
-  it('highlights neither when activePlayer is null', () => {
+  it('rings neither when activePlayer is null', () => {
     render(<DuelHud players={players} activePlayer={null} startingHp={STARTING_HP} />)
     expect(screen.getByTestId('hud-player-0')).toHaveAttribute('data-active', 'false')
     expect(screen.getByTestId('hud-player-1')).toHaveAttribute('data-active', 'false')
-    expect(screen.getByTestId('hud-player-0').className).not.toContain('opacity-50')
+    expect(screen.getByTestId('hud-player-0').className).not.toContain('ring-accent')
   })
 })
