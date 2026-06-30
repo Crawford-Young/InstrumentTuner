@@ -14,7 +14,7 @@ const LABELS = ['P1', 'P2'] as const
 
 export function DuelHud({ players, activePlayer, startingHp }: DuelHudProps) {
   return (
-    <div className="flex w-full max-w-sm items-center gap-4">
+    <div className="pointer-events-none fixed inset-x-0 top-14 z-20 flex justify-between gap-4 px-4">
       {players.map((player, i) => {
         const isActive = activePlayer === i
         return (
@@ -22,7 +22,7 @@ export function DuelHud({ players, activePlayer, startingHp }: DuelHudProps) {
             key={LABELS[i]}
             data-testid={`hud-player-${i}`}
             data-active={isActive}
-            className={`flex flex-1 items-center gap-2 rounded-lg p-2 transition-all ${
+            className={`flex w-44 items-center gap-2 rounded-lg bg-background/60 p-2 backdrop-blur-sm transition-all ${
               isActive ? 'ring-1 ring-accent' : 'ring-1 ring-transparent'
             }`}
           >
