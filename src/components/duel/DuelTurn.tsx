@@ -56,11 +56,11 @@ export function DuelTurn({
   if (mode === 'tap') {
     return (
       <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
-        <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/60">
+        <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
           Tap this tempo
         </p>
         <p className="text-7xl font-bold tabular-nums tracking-tight text-foreground">{target}</p>
-        <p className="font-mono text-xs text-muted-foreground/60">
+        <p className="font-mono text-xs text-muted-foreground">
           {tapTempo.tapCount}/{REQUIRED_TAPS} taps
         </p>
         <Button
@@ -77,7 +77,7 @@ export function DuelTurn({
   // guess mode
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
-      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/60">
+      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
         Guess the tempo
       </p>
       <Button

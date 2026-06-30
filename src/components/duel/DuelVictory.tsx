@@ -12,7 +12,7 @@ export interface DuelVictoryProps {
 export function DuelVictory({ winner, rounds, onRematch, onExit }: DuelVictoryProps) {
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
-      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/50">
+      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
         Match over
       </p>
       <p className="text-4xl font-bold tracking-tight text-accent">{winner} wins</p>

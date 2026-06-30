@@ -15,7 +15,7 @@ export function DuelReveal({ result, players, onNext }: DuelRevealProps) {
   const winnerLabel = result.winner === null ? null : result.winner === 0 ? 'P1' : 'P2'
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-5 text-center">
-      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/60">
+      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
         Target <span>{result.target}</span>
       </p>
 

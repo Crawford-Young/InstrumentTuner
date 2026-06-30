@@ -9,7 +9,7 @@ export function MultiplierBadge({ multiplier }: MultiplierBadgeProps) {
   return (
     <span
       className={`font-mono text-sm font-semibold tabular-nums ${
-        active ? 'text-accent' : 'text-muted-foreground/50'
+        active ? 'text-accent' : 'text-muted-foreground'
       }`}
     >
       ×{multiplier}
