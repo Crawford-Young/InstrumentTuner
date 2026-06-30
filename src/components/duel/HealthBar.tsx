@@ -9,8 +9,8 @@ export interface HealthBarProps {
 export function HealthBar({ label, hp, maxHp }: HealthBarProps) {
   const percent = Math.max(0, Math.min(100, (hp / maxHp) * 100))
   return (
-    <div className="flex w-full flex-col gap-1">
-      <div className="flex items-baseline justify-between font-mono text-xs text-muted-foreground">
+    <div className="flex w-full flex-col gap-1.5">
+      <div className="flex items-baseline justify-between font-mono text-sm text-muted-foreground">
         <span className="font-semibold text-foreground">{label}</span>
         <span className="tabular-nums">{hp}</span>
       </div>
@@ -20,7 +20,7 @@ export function HealthBar({ label, hp, maxHp }: HealthBarProps) {
         aria-valuenow={hp}
         aria-valuemin={0}
         aria-valuemax={maxHp}
-        className="h-3 w-full overflow-hidden rounded-full bg-muted-foreground/15"
+        className="h-5 w-full overflow-hidden rounded-full bg-muted-foreground/15"
       >
         <div
           data-testid="health-fill"
