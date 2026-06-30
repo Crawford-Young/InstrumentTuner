@@ -37,7 +37,7 @@ export function resolveRound(input: ResolveInput): ResolveOutput {
       players,
       result: {
         target, p1Answer, p2Answer, p1Distance, p2Distance,
-        winner: null, damage: 0, defeated: false,
+        winner: null, gap: 0, multiplier: 0, damage: 0, defeated: false,
       },
     }
   }
@@ -49,7 +49,8 @@ export function resolveRound(input: ResolveInput): ResolveOutput {
   const winnerPlayer = players[winner]
   const loserPlayer = players[winner === 0 ? 1 : 0]
 
-  const damage = (loserDist - winnerDist) * winnerPlayer.multiplier
+  const gap = loserDist - winnerDist
+  const damage = gap * winnerPlayer.multiplier
   const loserHp = Math.max(0, loserPlayer.hp - damage)
   const newWins = winnerPlayer.wins + 1
 
@@ -71,7 +72,7 @@ export function resolveRound(input: ResolveInput): ResolveOutput {
     players: newPlayers,
     result: {
       target, p1Answer, p2Answer, p1Distance, p2Distance,
-      winner, damage, defeated: loserHp === 0,
+      winner, gap, multiplier: winnerPlayer.multiplier, damage, defeated: loserHp === 0,
     },
   }
 }

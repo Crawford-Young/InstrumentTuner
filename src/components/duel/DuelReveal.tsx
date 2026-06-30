@@ -22,9 +22,12 @@ export function DuelReveal({ result, onNext }: DuelRevealProps) {
       </div>
 
       {winnerLabel ? (
-        <p className="text-lg font-semibold text-accent">
-          {winnerLabel} wins — {result.damage} damage
-        </p>
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-lg font-semibold text-accent">{winnerLabel} wins</p>
+          <p className="font-mono text-sm tabular-nums text-muted-foreground">
+            {result.gap} gap × ×{result.multiplier} = {result.damage} damage
+          </p>
+        </div>
       ) : (
         <p className="text-lg font-semibold text-muted-foreground">Tie — no damage</p>
       )}

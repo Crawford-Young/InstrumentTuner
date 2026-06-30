@@ -6,7 +6,7 @@ import type { RoundResult } from '@/lib/duel/types'
 
 const result: RoundResult = {
   target: 120, p1Answer: 120, p2Answer: 140,
-  p1Distance: 0, p2Distance: 20, winner: 0, damage: 20, defeated: false,
+  p1Distance: 0, p2Distance: 20, winner: 0, gap: 20, multiplier: 1, damage: 20, defeated: false,
 }
 
 describe('DuelReveal', () => {
@@ -15,7 +15,7 @@ describe('DuelReveal', () => {
     expect(screen.getByText(/target/i)).toBeInTheDocument()
     expect(screen.getByText('120')).toBeInTheDocument()
     expect(screen.getByText(/P1 wins/i)).toBeInTheDocument()
-    expect(screen.getByText(/20 damage/i)).toBeInTheDocument()
+    expect(screen.getByText(/20 gap × ×1 = 20 damage/i)).toBeInTheDocument()
   })
 
   it('renders a tie banner when winner is null', () => {

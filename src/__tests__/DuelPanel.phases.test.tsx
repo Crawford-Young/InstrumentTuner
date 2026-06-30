@@ -29,7 +29,7 @@ const baseState: DuelState = {
 
 const result: RoundResult = {
   target: 120, p1Answer: 120, p2Answer: 140,
-  p1Distance: 0, p2Distance: 20, winner: 0, damage: 20, defeated: false,
+  p1Distance: 0, p2Distance: 20, winner: 0, gap: 20, multiplier: 1, damage: 20, defeated: false,
 }
 
 function makeMatch(state: DuelState): DuelMatch {
