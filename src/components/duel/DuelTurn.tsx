@@ -38,7 +38,7 @@ export function DuelTurn({
   if (!revealed) {
     return (
       <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
-        <p className="text-lg font-semibold text-foreground">{player} &apos;s turn</p>
+        <p className="text-lg font-semibold text-foreground">{player}&apos;s turn</p>
         <p className="text-sm text-muted-foreground">
           Other player, look away. Press Ready when {player} is set.
         </p>

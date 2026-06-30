@@ -46,7 +46,7 @@ describe('DuelPanel phases', () => {
   it('renders P2 turn in p2-turn phase', () => {
     mockMatch = makeMatch({ ...baseState, phase: 'p2-turn' })
     render(<DuelPanel />)
-    expect(screen.getByText(/P2 's turn/i)).toBeInTheDocument()
+    expect(screen.getByText(/P2's turn/i)).toBeInTheDocument()
   })
 
   it('renders the reveal screen in reveal phase', () => {
