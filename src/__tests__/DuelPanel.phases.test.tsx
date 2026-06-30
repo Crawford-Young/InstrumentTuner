@@ -43,16 +43,24 @@ function makeMatch(state: DuelState): DuelMatch {
 }
 
 describe('DuelPanel phases', () => {
-  it('renders P2 turn in p2-turn phase', () => {
+  it('hides the HUD on setup', () => {
+    mockMatch = makeMatch({ ...baseState, phase: 'setup' })
+    render(<DuelPanel />)
+    expect(screen.queryByTestId('hud-player-0')).not.toBeInTheDocument()
+  })
+
+  it('renders P2 turn with HUD active on player 2', () => {
     mockMatch = makeMatch({ ...baseState, phase: 'p2-turn' })
     render(<DuelPanel />)
     expect(screen.getByText(/P2's turn/i)).toBeInTheDocument()
+    expect(screen.getByTestId('hud-player-1')).toHaveAttribute('data-active', 'true')
   })
 
-  it('renders the reveal screen in reveal phase', () => {
+  it('renders the reveal screen with HUD inactive', () => {
     mockMatch = makeMatch({ ...baseState, phase: 'reveal', lastResult: result })
     render(<DuelPanel />)
     expect(screen.getByText(/P1 wins/i)).toBeInTheDocument()
+    expect(screen.getByTestId('hud-player-0')).toHaveAttribute('data-active', 'false')
   })
 
   it('renders victory for P1 when winner is 0', () => {
