@@ -74,7 +74,7 @@ export default function Home() {
   const triggerCls = 'flex-1 rounded-md text-sm font-medium transition-all'
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
+    <main className="relative flex min-h-screen flex-col bg-background">
       <div
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
@@ -123,7 +123,7 @@ export default function Home() {
                 <h1 className="text-xl font-semibold tracking-tight text-foreground">
                   Instrument Tuner
                 </h1>
-                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground/50">
+                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
                   Chromatic · Real-time
                 </p>
               </div>
@@ -159,13 +159,13 @@ export default function Home() {
               />
 
               <div className="flex flex-col items-center gap-0.5">
-                <p className="font-mono text-[11px] tabular-nums text-muted-foreground/60">
+                <p className="font-mono text-[11px] tabular-nums text-muted-foreground">
                   Target{' '}
                   {activeString
                     ? `${activeString.name} · ${activeString.frequency.toFixed(1)} Hz`
                     : '—'}
                 </p>
-                <p className="font-mono text-[11px] tabular-nums text-muted-foreground/60">
+                <p className="font-mono text-[11px] tabular-nums text-muted-foreground">
                   Detected {detectedFreq ? `${detectedFreq.toFixed(1)} Hz` : '—'}
                 </p>
               </div>
@@ -208,7 +208,7 @@ export default function Home() {
                 <h1 className="text-xl font-semibold tracking-tight text-foreground">
                   Note Detector
                 </h1>
-                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground/50">
+                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
                   Chromatic · Real-time
                 </p>
               </div>
@@ -225,7 +225,7 @@ export default function Home() {
                   {detectedFreq !== null ? `${detectedFreq.toFixed(1)} Hz` : '— Hz'}
                 </p>
                 {!closestNote && (
-                  <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/40">
+                  <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
                     Awaiting signal
                   </p>
                 )}
@@ -269,7 +269,7 @@ export default function Home() {
                 <h1 className="text-xl font-semibold tracking-tight text-foreground">
                   Metronome
                 </h1>
-                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground/50">
+                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
                   Precision · Real-time
                 </p>
               </div>
@@ -278,7 +278,7 @@ export default function Home() {
               <p className="font-mono text-7xl font-bold tabular-nums tracking-tight text-foreground">
                 {metronome.bpm}
               </p>
-              <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/50">
+              <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
                 BPM
               </p>
 
@@ -300,7 +300,7 @@ export default function Home() {
                   aria-label="BPM slider"
                   className="w-full accent-accent"
                 />
-                <div className="mt-1 flex justify-between font-mono text-[10px] text-muted-foreground/40">
+                <div className="mt-1 flex justify-between font-mono text-[10px] text-muted-foreground">
                   <span>40</span>
                   <span>240</span>
                 </div>
@@ -353,6 +353,6 @@ export default function Home() {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </main>
   )
 }

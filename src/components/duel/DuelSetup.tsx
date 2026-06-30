@@ -19,7 +19,7 @@ export function DuelSetup({ onStart }: DuelSetupProps) {
     <div className="flex w-full max-w-sm flex-col items-center gap-6">
       <div className="flex flex-col items-center gap-1">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">Duel</h1>
-        <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground/50">
+        <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
           Local · Best of HP
         </p>
       </div>
