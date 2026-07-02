@@ -6,7 +6,11 @@
     "ignoredBuiltDependencies": [
       "sharp",
       "unrs-resolver"
-    ]
+    ],
+    "overrides": {
+      "undici": "7.28.0",
+      "postcss": "8.5.16"
+    }
   },
   "scripts": {
     "dev": "next dev",
