@@ -16,6 +16,16 @@ describe('DuelVictory', () => {
     expect(screen.getByText(/5 rounds/i)).toBeInTheDocument()
   })
 
+  it('pluralizes round count as singular when exactly 1 round was played', () => {
+    render(<DuelVictory winner="P1" rounds={1} result={result} onRematch={vi.fn()} onExit={vi.fn()} />)
+    expect(screen.getByText('1 round played')).toBeInTheDocument()
+  })
+
+  it('pluralizes round count as plural when 2 or more rounds were played', () => {
+    render(<DuelVictory winner="P1" rounds={2} result={result} onRematch={vi.fn()} onExit={vi.fn()} />)
+    expect(screen.getByText('2 rounds played')).toBeInTheDocument()
+  })
+
   it('shows the final round target, both answers and distances', () => {
     render(<DuelVictory winner="P1" rounds={3} result={result} onRematch={vi.fn()} onExit={vi.fn()} />)
     expect(screen.getByText(/Final round · Target 128/i)).toBeInTheDocument()
