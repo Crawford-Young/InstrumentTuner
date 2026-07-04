@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import { Analytics } from '@vercel/analytics/next'
+import Script from 'next/script'
 import './globals.css'
 
 const geistSans = Geist({
@@ -21,6 +22,8 @@ export const metadata: Metadata = {
   description: 'Real-time chromatic instrument tuner',
 }
 
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -33,6 +36,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </ThemeProvider>
         <Analytics />
+        {ADSENSE_CLIENT ? (
+          <Script
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+            strategy="lazyOnload"
+            crossOrigin="anonymous"
+          />
+        ) : null}
       </body>
     </html>
   )
