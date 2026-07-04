@@ -72,7 +72,7 @@ export default function Home() {
   }
 
   // Trigger class shared across all three tabs
-  const triggerCls = 'flex-1 rounded-md text-sm font-medium transition-all'
+  const triggerCls = 'flex-1 rounded-md px-1 text-sm font-medium transition-all sm:px-4'
 
   return (
     <main className="relative flex min-h-screen flex-col bg-background">
@@ -105,7 +105,8 @@ export default function Home() {
               Tuner
             </TabsTrigger>
             <TabsTrigger value="note-detector" variant="pills" className={triggerCls}>
-              Note Detector
+              <span className="sm:hidden">Notes</span>
+              <span className="hidden sm:inline">Note Detector</span>
             </TabsTrigger>
             <TabsTrigger value="metronome" variant="pills" className={triggerCls}>
               Metronome
