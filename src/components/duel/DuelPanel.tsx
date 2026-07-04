@@ -40,6 +40,7 @@ export function DuelPanel() {
           <DuelVictory
             winner={winner}
             rounds={state.roundNumber}
+            result={state.lastResult}
             onRematch={rematch}
             onExit={() => window.location.reload()}
           />
