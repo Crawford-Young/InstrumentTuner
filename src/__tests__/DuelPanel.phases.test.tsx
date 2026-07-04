@@ -73,6 +73,10 @@ describe('DuelPanel phases', () => {
     render(<DuelPanel />)
     expect(screen.getByText(/P1 wins/i)).toBeInTheDocument()
     expect(screen.getByText(/4 rounds/i)).toBeInTheDocument()
+    expect(screen.getByText(/Final round · Target 120/i)).toBeInTheDocument()
+    expect(screen.getByText(/P1 120 · off 0/)).toBeInTheDocument()
+    expect(screen.getByText(/P2 140 · off 20/)).toBeInTheDocument()
+    expect(screen.getByText(/20 gap × ×1 = 20 damage/)).toBeInTheDocument()
   })
 
   it('renders victory for P2 and Exit reloads the page', async () => {
