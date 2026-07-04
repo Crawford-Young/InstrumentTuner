@@ -18,7 +18,9 @@ export function DuelVictory({ winner, rounds, result, onRematch, onExit }: DuelV
         Match over
       </p>
       <p className="text-4xl font-bold tracking-tight text-accent">{winner} wins</p>
-      <p className="text-sm text-muted-foreground">{rounds} rounds played</p>
+      <p className="text-sm text-muted-foreground">
+        {rounds} {rounds === 1 ? 'round' : 'rounds'} played
+      </p>
 
       <div className="flex w-full flex-col items-center gap-2">
         <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
