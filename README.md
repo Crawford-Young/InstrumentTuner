@@ -42,6 +42,27 @@ Open [http://localhost:3000](http://localhost:3000).
 - **Hooks** in `src/hooks/` (`useMetronome`, `useDuelMatch`, `useTapTempo`, `useTempoPlayback`, `useAudioAnalyzer`, `usePitchDetector`) hold stateful behavior.
 - **Components** in `src/components/` compose the UI; `src/components/duel/` holds the Duel feature set.
 
+## Monetization (AdSense)
+
+Ad support is fully env-gated: with no env vars set (dev, CI, tests, local Lighthouse) the app renders zero ad markup and loads zero ad scripts.
+
+| Var | What it is |
+|---|---|
+| `NEXT_PUBLIC_ADSENSE_CLIENT` | AdSense publisher id (`ca-pub-…`) |
+| `NEXT_PUBLIC_ADSENSE_SLOT` | Display ad-unit slot id for the bottom banner |
+
+Both must be set for the banner (`src/components/AdBanner.tsx`, mounted below the tab panels) to render; the loader `<Script>` in `src/app/layout.tsx` requires the client id. `public/ads.txt` ships with a placeholder publisher id (`pub-0000000000000000`).
+
+### Go-live checklist
+
+1. Reactivate the AdSense account (YouTube-hosted accounts need an upgrade to serve ads on your own sites).
+2. Add the custom domain as a site in the AdSense dashboard.
+3. Create a display ad unit → copy its slot id.
+4. Set `NEXT_PUBLIC_ADSENSE_CLIENT` + `NEXT_PUBLIC_ADSENSE_SLOT` in Vercel project env.
+5. Replace the placeholder publisher id in `public/ads.txt` with the real one.
+6. Wait out Google's site review (days–2 weeks; site works normally while pending).
+7. EEA consent: enable Google's built-in CMP in the AdSense dashboard — no code change needed.
+
 ## Deploy
 
 Deploys to Vercel as a static-first Next.js app.
