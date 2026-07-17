@@ -13,8 +13,8 @@ importers:
   .:
     dependencies:
       '@crawfordyoung/ui':
-        specifier: ^0.22.0
-        version: 0.22.0(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(cmdk@1.1.1(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(date-fns@4.4.0)(framer-motion@12.42.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.17.0(react@19.2.4))(react-day-picker@10.0.1(@types/react@19.2.16)(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@17.0.2)(react@19.2.4)(redux@5.0.1)(sonner@2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss-animate@1.0.7(tailwindcss@4.3.0))(tailwindcss@4.3.0)
+        specifier: ^0.24.0
+        version: 0.24.0(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(cmdk@1.1.1(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(date-fns@4.4.0)(framer-motion@12.42.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.17.0(react@19.2.4))(react-day-picker@10.0.1(@types/react@19.2.16)(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@17.0.2)(react@19.2.4)(redux@5.0.1)(sonner@2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss-animate@1.0.7(tailwindcss@4.3.0))(tailwindcss@4.3.0)
       '@vercel/analytics':
         specifier: ^2.0.1
         version: 2.0.1(next@16.2.7(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -183,8 +183,8 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@crawfordyoung/ui@0.22.0':
-    resolution: {integrity: sha512-oyhluUFgNjmt2UAzfxPZM3ophGCOcSnAKWKQPeJeSkeruGliY8LibTyGdzrT2YG2/rW4gNgLe5kj5CT2t4VBAw==}
+  '@crawfordyoung/ui@0.24.0':
+    resolution: {integrity: sha512-gr210fAADflbiN5vNdxwRqEzg2E/44IVlbm9z5PREOftR/XDwbWvQ1ouIzW6vKURgQV46e7bhEYaG682kMNt5Q==}
     peerDependencies:
       '@tanstack/react-table': '>=8'
       cmdk: '>=1'
@@ -3733,7 +3733,7 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
 
-  '@crawfordyoung/ui@0.22.0(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(cmdk@1.1.1(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(date-fns@4.4.0)(framer-motion@12.42.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.17.0(react@19.2.4))(react-day-picker@10.0.1(@types/react@19.2.16)(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@17.0.2)(react@19.2.4)(redux@5.0.1)(sonner@2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss-animate@1.0.7(tailwindcss@4.3.0))(tailwindcss@4.3.0)':
+  '@crawfordyoung/ui@0.24.0(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(cmdk@1.1.1(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(date-fns@4.4.0)(framer-motion@12.42.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.17.0(react@19.2.4))(react-day-picker@10.0.1(@types/react@19.2.16)(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@17.0.2)(react@19.2.4)(redux@5.0.1)(sonner@2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss-animate@1.0.7(tailwindcss@4.3.0))(tailwindcss@4.3.0)':
     dependencies:
       '@radix-ui/react-accordion': 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@radix-ui/react-alert-dialog': 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)

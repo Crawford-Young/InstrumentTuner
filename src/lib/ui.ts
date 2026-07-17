@@ -20,3 +20,4 @@ export {
   AlertDescription,
   AlertTitle,
 } from '@crawfordyoung/ui'
+export { RouteErrorFallback } from '@crawfordyoung/ui'
