@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useAudioAnalyzer } from '@/hooks/useAudioAnalyzer'
 import { usePitchDetector } from '@/hooks/usePitchDetector'
 import { useMetronome } from '@/hooks/useMetronome'
@@ -354,6 +355,14 @@ export default function Home() {
           </div>
         </TabsContent>
       </Tabs>
+      <footer className="border-t border-border px-6 py-6 text-center">
+        <Link
+          href="/privacy"
+          className="text-sm text-muted-foreground underline underline-offset-4"
+        >
+          Privacy Policy
+        </Link>
+      </footer>
     </main>
   )
 }
