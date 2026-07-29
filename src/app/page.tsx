@@ -8,7 +8,6 @@ import { TunerGauge } from '@/components/TunerGauge'
 import { StringSelector } from '@/components/StringSelector'
 import { MetronomeBeat } from '@/components/MetronomeBeat'
 import { DuelPanel } from '@/components/duel/DuelPanel'
-import { AdBanner } from '@/components/AdBanner'
 import { INSTRUMENTS, detectClosestString, type Instrument } from '@/lib/instruments'
 import {
   Button,
@@ -355,7 +354,6 @@ export default function Home() {
           </div>
         </TabsContent>
       </Tabs>
-      <AdBanner />
     </main>
   )
 }
