@@ -1,0 +1,80 @@
+# Metronome Duel: Rules and Strategy
+
+Metronome Duel is the competitive mode of [this site's metronome](/): a local, hot-seat,
+two-player tempo game. One device, two players, one question repeated until somebody's
+health bar runs out — *how well do you actually know what 137 BPM feels like?*
+
+## The shape of a match
+
+Each round, the game picks a random target tempo between **40 and 200 BPM**. Both players
+answer the same target, one at a time — this is hot-seat play, so the screen tells the
+other player to look away, and each turn starts behind a **Ready** button so nobody sees
+anything early. When both answers are in, the round reveals the target, both answers, and
+the damage dealt. Rounds repeat, each with a fresh random target, until one player's HP
+reaches zero and the survivor takes the match. A rematch resets both players and rolls a
+new target.
+
+## The two modes
+
+You pick a mode when setting up the match, and it applies to both players:
+
+- **Tap mode** shows you the target as a number — say, **164** — and you tap it back. The
+  round takes exactly **4 taps**; the game averages the intervals between your taps and
+  that average becomes your answer. You know the number; the test is whether your hands
+  can produce it.
+- **Guess mode** flips the direction: you *hear* the tempo — **8 clicks**, with one replay
+  available if you want to hear it a second time — and answer with a slider from 40 to
+  200. The slider starts at 120, the midpoint. You hear the tempo; the test is whether
+  you can name it.
+
+Tap mode tests production, guess mode tests perception. They're different skills, and most
+players are noticeably better at one of them.
+
+## How scoring works
+
+Every number here comes from the game's scoring engine:
+
+1. Each answer's **distance** is how far it landed from the target, in BPM, capped at
+   160 — so a wildly wrong answer can't lose by more than the full width of the target
+   range.
+2. The **closer answer wins the round**. If both distances are exactly equal, the round is
+   a tie: no winner, no damage.
+3. The **gap** is the difference between the two distances — how much closer the winner
+   was. Winning 3-off against 5-off is a gap of 2; winning 3-off against 40-off is a gap
+   of 37.
+4. **Damage = gap × the winner's multiplier**, subtracted from the loser's HP.
+5. The **multiplier starts at 1 and becomes 1 + your total round wins** — after your first
+   win it's 2, after your second 3, and so on, for the rest of the match. It never resets.
+6. Both players start at **160 HP** — exactly the width of the tempo range, which is the
+   most a single ×1 round could theoretically take.
+
+The multiplier is the engine of the whole game. Early rounds are cheap: a gap of 5 at ×1
+is 5 damage. The same gap five wins later is 30. Matches snowball — whoever banks wins
+early gets to convert small margins into large damage late.
+
+## Strategy
+
+**Build a tempo library.** The strongest move in either mode is boring: practice with
+[the metronome](/) and memorize anchors. The slider runs 40–240 — internalize what 60,
+90, 120, 160, and 200 feel like, and every duel answer becomes interpolation between
+known points instead of a cold guess. Song references work too: any song you know cold
+is a tempo you own.
+
+**In tap mode, subdivide.** Four taps is a tiny sample — one rushed tap drags your whole
+average. Instead of launching straight in, count a bar internally at the target ("1-2-3-4"
+at what you believe 164 is), *then* tap on that internal grid. This is exactly the
+subdivision skill from [Metronome Basics](/guides/metronome-basics), and it's why
+metronome practice quietly makes you better at Duel.
+
+**In guess mode, spend the replay.** You get the 8 clicks twice; there's no cost to the
+second listen. Tap along covertly with a finger on the first pass, count against a known
+anchor on the second.
+
+**Guess conservatively when you're behind.** The multiplier math punishes coin-flip
+answers: losing a round doesn't just cost HP, it feeds the opponent's next multiplier
+step. When you're unsure, an answer you're *confident* is within 10 beats the hero guess
+that might be perfect or might hand over a 30-point gap. Staying alive keeps your own
+win count growing — and late in a match, the player with the bigger multiplier wins
+exchanges they only barely deserve.
+
+Ready to test it? Open the **Duel** tab on [the tuner](/) and settle it properly.
