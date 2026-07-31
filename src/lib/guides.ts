@@ -35,6 +35,30 @@ export const GUIDES: readonly GuideMeta[] = [
     category: 'tuning',
     order: 3,
   },
+  {
+    slug: 'drop-d-tuning',
+    title: 'Drop D Tuning: How and Why',
+    description:
+      'How to get into Drop D with a chromatic tuner — only the low E moves, from E2 down to D2 — and what the tuning is for.',
+    category: 'tuning',
+    order: 4,
+  },
+  {
+    slug: 'dadgad-tuning',
+    title: 'DADGAD Tuning: The Dsus4 Wash',
+    description:
+      'How to tune to DADGAD with a chromatic tuner — three strings down a whole step — and why Celtic and fingerstyle players love it.',
+    category: 'tuning',
+    order: 5,
+  },
+  {
+    slug: 'open-g-and-open-d-tuning',
+    title: 'Open G and Open D Tuning',
+    description:
+      'How to tune to Open G (DGDGBD) and Open D (DADF#AD) with a chromatic tuner, and what slide and blues players do with them.',
+    category: 'tuning',
+    order: 6,
+  },
 ]
 
 export function guidePath(slug: string): string {
