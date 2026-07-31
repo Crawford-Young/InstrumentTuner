@@ -12,6 +12,22 @@ export type GuideMeta = z.infer<typeof GuideMetaSchema>
 
 export const GUIDES: readonly GuideMeta[] = [
   {
+    slug: 'how-to-tune-a-guitar-by-ear',
+    title: 'How to Tune a Guitar by Ear',
+    description:
+      'Tune a guitar without a tuner using the 5th-fret method, harmonics, and beats — and verify the result with a chromatic tuner.',
+    category: 'tuning',
+    order: 1,
+  },
+  {
+    slug: 'reading-a-chromatic-tuner',
+    title: 'Reading a Chromatic Tuner: What Cents Mean',
+    description:
+      'What a cent is, why the needle is not a Hz readout, and how to use the ±5-cent "Tuned" band to get in tune faster.',
+    category: 'tuning',
+    order: 2,
+  },
+  {
     slug: 'standard-tuning-reference',
     title: 'Standard Tuning Reference',
     description:
