@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test'
 
+import { SITE_URL } from '@/lib/site-routes'
+
 const PUBLISHER_LINE = 'google.com, pub-4628379278051632, DIRECT, f08c47fec0942fa0'
 
 test('ads.txt serves the publisher line as plain text', async ({ request }) => {
@@ -33,4 +35,14 @@ test('unknown paths return a real 404 status', async ({ request }) => {
 test('the homepage renders no ad unit', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('ins.adsbygoogle')).toHaveCount(0)
+})
+
+// This host advertised no canonical origin at all before the openGraph block —
+// no metadataBase either. metadataBase alone would not have been enough: it only
+// resolves relative urls inside other metadata fields, so the block is what
+// actually emits og:url.
+test('canonical metadata advertises the production origin', async ({ page }) => {
+  await page.goto('/')
+  const ogUrl = await page.locator('meta[property="og:url"]').getAttribute('content')
+  expect(ogUrl).toBe(SITE_URL)
 })
