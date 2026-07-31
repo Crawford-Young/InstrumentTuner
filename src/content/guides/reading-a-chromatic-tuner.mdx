@@ -1,0 +1,67 @@
+# Reading a Chromatic Tuner: What Cents Mean
+
+A chromatic tuner tells you two things: which note you're closest to, and how far you are
+from it. That second number is measured in **cents**, and understanding it is the
+difference between chasing the needle around and tuning quickly. This guide explains what
+the cents readout actually measures and how [this site's tuner](/) displays it.
+
+## What a cent is
+
+A cent is one hundredth of a semitone — the distance between two adjacent frets on a
+guitar, split into 100 equal steps. An octave contains 12 semitones, so it spans 1,200
+cents. The scale is **logarithmic**: each cent multiplies the frequency by the same tiny
+ratio rather than adding a fixed number of hertz. That design matches how human hearing
+works — we perceive pitch by ratios, not by raw frequency differences. A note 10 cents
+sharp sounds equally out of tune whether it's a low bass note or a high one.
+
+## Why the needle is not a Hz readout
+
+Because cents are ratios, the same cents error corresponds to very different frequency
+errors at different pitches. Take the two E strings on a guitar, both drawn from standard
+tuning: low E is E2 at 82.41 Hz, and high E is E4 at 329.63 Hz — two octaves apart. Being
+5 cents sharp on the low E means being about **0.24 Hz** high. Being 5 cents sharp on the
+high E means being about **0.95 Hz** high — four times the frequency error, but the *same*
+needle position and the same perceived out-of-tuneness.
+
+This is why a good tuner displays cents rather than hertz: one scale that means the same
+thing everywhere on the instrument. If a tuner showed "+1 Hz," you'd have no idea whether
+that was nearly perfect (on a low string) or badly sharp (on a high one).
+
+## How this tuner displays it
+
+The tuner on this site compares the pitch it detects against the nearest note in equal
+temperament, referenced to A4 = 440 Hz, and shows the difference on a needle:
+
+- **The needle spans ±50 cents.** Fifty cents is half a semitone — the point at which
+  you're closer to the *next* note than the one displayed. Any error larger than that
+  clamps to the end of the scale, because past that point the tuner re-labels your pitch
+  as the neighboring note instead.
+- **The "Tuned" band is ±5 cents.** When the detected pitch is within 5 cents of the
+  target, the display reads **Tuned**. Outside that band it tells you the direction to
+  move: **Tune up** when you're flat (negative cents), **Tune down** when you're sharp
+  (positive cents).
+
+Why ±5 cents and not zero? A vibrating string isn't a laboratory oscillator — its pitch
+wavers slightly as the note decays, and the attack of a pluck reads sharper than the
+sustain. Most listeners can't reliably hear errors under about 5 cents in normal playing,
+and chasing the last cent means fighting noise in both the string and the measurement.
+Landing inside the band is in tune for any practical purpose.
+
+## Sharp, flat, and the tune-up habit
+
+**Flat** means below the target pitch (needle left, negative cents); **sharp** means above
+it (needle right, positive cents). When you're flat, tighten the string toward the pitch.
+When you're sharp, don't just nudge it down to the line: drop *below* the target
+deliberately, then come back up to it. Approaching every string from below keeps the
+string, nut, and tuning gears loaded in one direction, so the pitch doesn't slip the
+moment you start playing. It's the single habit that most improves tuning stability.
+
+Let the note ring while you read the needle — pluck once, watch the sustain, and ignore
+the first instant of the attack. Repeated hard picking while turning the peg gives the
+tuner (and your ear) a moving target.
+
+## Put it to use
+
+Open [the tuner](/), play a string, and watch the cents readout as you adjust. If you want
+the exact target notes and frequencies for guitar, ukulele, or Bb trumpet, they're
+tabulated in the [Standard Tuning Reference](/guides/standard-tuning-reference).
