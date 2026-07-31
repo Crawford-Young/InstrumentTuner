@@ -91,30 +91,39 @@ export default function Home() {
       >
         {/* Pill nav — spans full header width, no max-w constraint */}
         <div className="sticky top-0 z-10 border-b border-border/40 bg-background/80 px-4 py-3 backdrop-blur-sm">
-          {/*
-            TabsList pills variant uses inline-flex which shrinks to content.
-            style={{ display: 'flex' }} overrides inline-flex so the list
-            fills its parent and flex-1 on triggers distributes space evenly.
-          */}
-          <TabsList
-            variant="pills"
-            className="w-full"
-            style={{ display: 'flex' }}
-          >
-            <TabsTrigger value="tuner" variant="pills" className={triggerCls}>
-              Tuner
-            </TabsTrigger>
-            <TabsTrigger value="note-detector" variant="pills" className={triggerCls}>
-              <span className="sm:hidden">Notes</span>
-              <span className="hidden sm:inline">Note Detector</span>
-            </TabsTrigger>
-            <TabsTrigger value="metronome" variant="pills" className={triggerCls}>
-              Metronome
-            </TabsTrigger>
-            <TabsTrigger value="duel" variant="pills" className={triggerCls}>
-              Duel
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex items-center gap-3">
+            {/*
+              TabsList pills variant uses inline-flex which shrinks to content.
+              style={{ display: 'flex' }} overrides inline-flex so the list
+              fills its parent and flex-1 on triggers distributes space evenly.
+              The wrapper's flex-1 (not w-full) leaves room for the Guides link.
+            */}
+            <TabsList
+              variant="pills"
+              className="flex-1"
+              style={{ display: 'flex' }}
+            >
+              <TabsTrigger value="tuner" variant="pills" className={triggerCls}>
+                Tuner
+              </TabsTrigger>
+              <TabsTrigger value="note-detector" variant="pills" className={triggerCls}>
+                <span className="sm:hidden">Notes</span>
+                <span className="hidden sm:inline">Note Detector</span>
+              </TabsTrigger>
+              <TabsTrigger value="metronome" variant="pills" className={triggerCls}>
+                Metronome
+              </TabsTrigger>
+              <TabsTrigger value="duel" variant="pills" className={triggerCls}>
+                Duel
+              </TabsTrigger>
+            </TabsList>
+            <Link
+              href="/guides"
+              className="shrink-0 text-sm text-muted-foreground underline underline-offset-4"
+            >
+              Guides
+            </Link>
+          </div>
         </div>
 
         {/* Tuner */}
@@ -356,12 +365,20 @@ export default function Home() {
         </TabsContent>
       </Tabs>
       <footer className="border-t border-border px-6 py-6 text-center">
-        <Link
-          href="/privacy"
-          className="text-sm text-muted-foreground underline underline-offset-4"
-        >
-          Privacy Policy
-        </Link>
+        <div className="flex items-center justify-center gap-4">
+          <Link
+            href="/guides"
+            className="text-sm text-muted-foreground underline underline-offset-4"
+          >
+            Guides
+          </Link>
+          <Link
+            href="/privacy"
+            className="text-sm text-muted-foreground underline underline-offset-4"
+          >
+            Privacy Policy
+          </Link>
+        </div>
       </footer>
     </main>
   )
