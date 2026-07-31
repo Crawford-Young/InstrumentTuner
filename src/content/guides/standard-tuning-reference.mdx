@@ -1,0 +1,59 @@
+# Standard Tuning Reference
+
+"Standard tuning" is the default set of pitches an instrument is built and taught around. It is a convention, not a law of physics — but it is the convention every chord chart, lesson, and play-along recording assumes, so it is the first thing to get right. This page lists the standard tuning for each instrument this app supports, with the exact frequencies the [tuner](/) listens for, and explains the one case (Bb trumpet) where the note you read is not the pitch you hear.
+
+## Guitar: E2 to E4
+
+Six strings, tuned in fourths except for one major third between the G and B strings. From the thickest string to the thinnest:
+
+| String | Note | Frequency |
+| ------ | ---- | --------- |
+| 6th (thickest) | E2 | 82.41 Hz |
+| 5th | A2 | 110.00 Hz |
+| 4th | D3 | 146.83 Hz |
+| 3rd | G3 | 196.00 Hz |
+| 2nd | B3 | 246.94 Hz |
+| 1st (thinnest) | E4 | 329.63 Hz |
+
+The number after each note name is its octave. Both E strings are the note E, two octaves apart — E4 vibrates exactly four times as fast as E2. That octave number matters when you tune: a string held at the right note but the wrong octave will read as in tune on some tuners while sounding obviously wrong. This tuner tracks the full frequency, so it will steer you to the correct octave.
+
+## Ukulele: reentrant G-C-E-A
+
+A soprano, concert, or tenor ukulele in standard tuning:
+
+| String | Note | Frequency |
+| ------ | ---- | --------- |
+| 4th (closest to you) | G4 | 392.00 Hz |
+| 3rd | C4 | 261.63 Hz |
+| 2nd | E4 | 329.63 Hz |
+| 1st | A4 | 440.00 Hz |
+
+Notice the surprise in the 4th string: G4 is *higher* than the C4 and E4 that follow it. This is called reentrant tuning — the strings do not descend in pitch from top to bottom the way guitar strings do. The high G is what gives the ukulele its bright, close-voiced strum. If you are coming from guitar, resist the instinct to tune that 4th string down an octave to G3: the tuner expects G4 at 392 Hz, and so does virtually all ukulele music.
+
+## Bb trumpet: written notes vs. concert pitch
+
+The trumpet is a transposing instrument. When a trumpet player reads and fingers a written C, the pitch that comes out of the bell is a concert Bb — one whole step (a major second) lower than written. Trumpet music is written this way on purpose, so the same fingerings work across the whole family of brass instruments.
+
+This app follows the player's point of view: the tuner displays the *written* note names a trumpet player thinks in, while listening for the *concert* frequencies the instrument actually produces. So when you play your written C4, the display says C4 — and under the hood it is matching the 233.08 Hz of concert Bb3. The full open-note-friendly range it tracks:
+
+| Written note | Sounding frequency |
+| ------------ | ------------------ |
+| C4 | 233.08 Hz |
+| D4 | 261.63 Hz |
+| E4 | 293.66 Hz |
+| F4 | 311.13 Hz |
+| G4 | 349.23 Hz |
+| A4 | 392.00 Hz |
+| B4 | 440.00 Hz |
+| C5 | 466.16 Hz |
+
+If you ever cross-check against a piano or a generic tuner app, remember the offset: your written C is the piano's Bb. That single fact resolves almost every "my tuner says I am a whole step off" panic.
+
+## Reading the target row in the tuner
+
+Open the [tuner](/), pick your instrument, and play one note. The app compares the incoming pitch against the table above for that instrument and locks onto the closest target — you do not have to select which string you are tuning. The target note lights up, and the needle shows how far you are from it in cents. Aim for the center: within ±5 cents the display marks you as tuned, which is closer than most ears can distinguish.
+
+From here:
+
+- [Reading a Chromatic Tuner](/guides/reading-a-chromatic-tuner) explains cents, the needle, and why ±5 is the practical threshold.
+- [How to Tune a Guitar by Ear](/guides/how-to-tune-a-guitar-by-ear) covers tuning when you trust your ears more than a screen.

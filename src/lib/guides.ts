@@ -10,7 +10,16 @@ export const GuideMetaSchema = z.object({
 
 export type GuideMeta = z.infer<typeof GuideMetaSchema>
 
-export const GUIDES: readonly GuideMeta[] = []
+export const GUIDES: readonly GuideMeta[] = [
+  {
+    slug: 'standard-tuning-reference',
+    title: 'Standard Tuning Reference',
+    description:
+      'Standard tuning notes and frequencies for guitar, ukulele, and Bb trumpet, and how to use them with a chromatic tuner.',
+    category: 'tuning',
+    order: 3,
+  },
+]
 
 export function guidePath(slug: string): string {
   return `/guides/${slug}`
