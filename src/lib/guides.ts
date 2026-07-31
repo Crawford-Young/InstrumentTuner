@@ -59,6 +59,22 @@ export const GUIDES: readonly GuideMeta[] = [
     category: 'tuning',
     order: 6,
   },
+  {
+    slug: 'metronome-basics',
+    title: 'Metronome Basics: BPM, Time Signatures, and Tap Tempo',
+    description:
+      'What BPM measures, how time signatures work, and how to practice with a metronome — including tap tempo and slow practice.',
+    category: 'rhythm',
+    order: 7,
+  },
+  {
+    slug: 'metronome-duel-guide',
+    title: 'Metronome Duel: Rules and Strategy',
+    description:
+      'How Metronome Duel works — tap and guess modes, the scoring and multiplier system — plus strategy for winning matches.',
+    category: 'rhythm',
+    order: 8,
+  },
 ]
 
 export function guidePath(slug: string): string {
