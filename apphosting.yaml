@@ -10,13 +10,7 @@ runConfig:
   cpu: 1
   memoryMiB: 512
 
-env:
-  # AdSense is env-gated (see CLAUDE.md). Both values are public ids, inlined
-  # at build time, so they need BUILD availability. Leave them unset on any
-  # non-production backend to keep ads off.
-  - variable: NEXT_PUBLIC_ADSENSE_CLIENT
-    value: ''
-    availability: [BUILD, RUNTIME]
-  - variable: NEXT_PUBLIC_ADSENSE_SLOT
-    value: ''
-    availability: [BUILD, RUNTIME]
+# No env block. AdSense is env-gated (see CLAUDE.md) and must stay off outside
+# production, so NEXT_PUBLIC_ADSENSE_CLIENT / NEXT_PUBLIC_ADSENSE_SLOT go in an
+# apphosting.production.yaml (or the production backend's console settings)
+# with availability [BUILD, RUNTIME]. They are inlined at build time.
