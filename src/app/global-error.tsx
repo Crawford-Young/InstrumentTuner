@@ -1,5 +1,7 @@
 'use client'
 
+import * as Sentry from '@sentry/nextjs'
+import { useEffect } from 'react'
 import '@/app/globals.css'
 import { RouteErrorFallback } from '@/lib/ui'
 
@@ -10,6 +12,10 @@ export default function GlobalError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  useEffect(() => {
+    Sentry.captureException(error)
+  }, [error])
+
   return (
     <html lang="en" className="dark">
       <body className="flex min-h-screen items-center justify-center">

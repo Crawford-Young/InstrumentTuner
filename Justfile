@@ -13,4 +13,7 @@ typecheck:
 lint:
   pnpm lint
 
+build:
+  pnpm build
+
 check: typecheck lint test
