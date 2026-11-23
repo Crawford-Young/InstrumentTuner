@@ -1,0 +1,16 @@
+# Firebase App Hosting (Cloud Run underneath). Prep for the GCP move: Vercel
+# keeps deploying until the cutover, and nothing here affects it.
+# Schema: https://firebase.google.com/docs/app-hosting/configure
+
+runConfig:
+  # Scale to zero between visits; a cold start costs one slow first request.
+  minInstances: 0
+  maxInstances: 4
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 512
+
+# No env block. AdSense is env-gated (see CLAUDE.md) and must stay off outside
+# production, so NEXT_PUBLIC_ADSENSE_CLIENT / NEXT_PUBLIC_ADSENSE_SLOT go in an
+# apphosting.production.yaml (or the production backend's console settings)
+# with availability [BUILD, RUNTIME]. They are inlined at build time.

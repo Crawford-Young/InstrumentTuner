@@ -11,7 +11,7 @@
 ## Error boundaries
 
 - `src/app/error.tsx` (root) and `src/app/global-error.tsx` use `@crawfordyoung/ui`'s `RouteErrorFallback` (via the `src/lib/ui.ts` named-export shim) with `homeHref="/"` — root/global boundaries strand the user with no surviving nav, so they get the home link; segment boundaries would keep the app shell and would NOT get one (this app has no segment boundaries, root-only is sufficient).
-- **Sentry gap (accepted, documented):** no `@sentry/nextjs` dependency in this repo, so neither boundary captures errors — they only render the fallback UI. Capture lands with the repo's queued CI-housekeeping wave (Sentry install). Don't add ad-hoc capture outside that wave.
+- **No error reporting service.** The boundaries render the fallback UI only; Sentry was dropped ahead of the move to GCP, so capture lands with that migration.
 
 ## AdSense conventions
 
@@ -20,3 +20,11 @@
 - **Ad units render only on pages carrying substantive prose. The homepage is a bare tool surface and must never mount `AdBanner`.** The env gate is not sufficient on its own — a gated unit on a contentless page is still live in production, which is exactly AdSense's *"Google-served ads on screens without publisher content"* policy violation. The homepage measured 28 visible words with the loader live in the served HTML (2026-07-28, contributing cause of the AdSense rejection); `<AdBanner />` was removed from it. `src/__tests__/home-no-ads.test.tsx` and the `ins.adsbygoogle` assertion in `e2e/compliance.spec.ts` are the durable guards — a future wave that re-mounts it on the tool page fails both.
 - **Guide pages are the sanctioned `AdBanner` mount (adsense-w2), always through `src/components/GuideAdSlot.tsx`** — it enforces the content floor (`wordCount >= MIN_GUIDE_WORDS`, 500) so an ad can never render on a thin page. Never mount `AdBanner` directly on a route; never mount anything on the `/guides` hub (link list, not prose — `e2e/guides.spec.ts` asserts zero `ins.adsbygoogle` there and on every guide page in the env-unset state).
 - **Adding a guide = registry entry in `src/lib/guides.ts` + `src/content/guides/<slug>.mdx` + one explicit import line in `src/app/guides/content-map.ts`.** The content tests (`src/__tests__/guide-content.test.ts`, `src/__tests__/guides.test.ts`) enforce the triple: a registry entry without an MDX file (or under 500 words), an orphan MDX file, or a missing content-map line all fail `just check`. Keep the prose 500–900 words, facts from the app source, links to `/` and 1–2 sibling guides.
+
+## CI
+
+`.github/workflows/ci.yml` runs lint, typecheck, unit tests (100% coverage) + `pnpm audit --audit-level=high`, then build and Playwright e2e. `next build` fetches Geist from Google Fonts, so it needs network access to `fonts.googleapis.com`.
+
+## Hosting (GCP move)
+
+Production is still Vercel. `apphosting.yaml` prepares Firebase App Hosting (Cloud Run underneath): scale-to-zero, no env block. When the backend is created, put the two AdSense ids in `apphosting.production.yaml` or the production backend settings (availability BUILD + RUNTIME) so ads stay off everywhere else. `engines.node` is `>=22` because App Hosting supports Node 22+.
