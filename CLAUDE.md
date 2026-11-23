@@ -27,4 +27,4 @@
 
 ## Hosting (GCP move)
 
-Production is still Vercel. `apphosting.yaml` prepares Firebase App Hosting (Cloud Run underneath): scale-to-zero, the two AdSense ids as build-time env. When the backend is created, set the AdSense values on the production backend only. `engines.node` is `>=22` because App Hosting supports Node 22+.
+Production is still Vercel. `apphosting.yaml` prepares Firebase App Hosting (Cloud Run underneath): scale-to-zero, no env block. When the backend is created, put the two AdSense ids in `apphosting.production.yaml` or the production backend settings (availability BUILD + RUNTIME) so ads stay off everywhere else. `engines.node` is `>=22` because App Hosting supports Node 22+.
