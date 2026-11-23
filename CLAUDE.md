@@ -24,3 +24,7 @@
 ## CI
 
 `.github/workflows/ci.yml` runs lint, typecheck, unit tests (100% coverage) + `pnpm audit --audit-level=high`, then build and Playwright e2e. `next build` fetches Geist from Google Fonts, so it needs network access to `fonts.googleapis.com`.
+
+## Hosting (GCP move)
+
+Production is still Vercel. `apphosting.yaml` prepares Firebase App Hosting (Cloud Run underneath): scale-to-zero, the two AdSense ids as build-time env. When the backend is created, set the AdSense values on the production backend only. `engines.node` is `>=22` because App Hosting supports Node 22+.
