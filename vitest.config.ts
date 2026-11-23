@@ -12,14 +12,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**'],
-      exclude: [
-        'src/test/**',
-        'src/app/**',
-        'src/content/**',
-        // Sentry bootstrap: init calls only, no logic to unit-test.
-        'src/instrumentation.ts',
-        'src/instrumentation-client.ts',
-      ],
+      exclude: ['src/test/**', 'src/app/**', 'src/content/**'],
       thresholds: { statements: 100, branches: 100, functions: 100, lines: 100 },
     },
   },

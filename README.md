@@ -73,7 +73,7 @@ Both must be set for the banner (`src/components/AdBanner.tsx`) to render; the l
 
 ## Error Boundaries
 
-`src/app/error.tsx` (root) and `src/app/global-error.tsx` render `@crawfordyoung/ui`'s `RouteErrorFallback` with `homeHref="/"`, giving a crashed page a way back to the app shell instead of a dead end. **No Sentry capture** — the repo has no `@sentry/nextjs` dependency; error capture is deferred to the queued CI-housekeeping wave (Sentry install + wiring). Segment-level boundaries are out of scope for this small app; root-only placement is sufficient.
+`src/app/error.tsx` (root) and `src/app/global-error.tsx` render `@crawfordyoung/ui`'s `RouteErrorFallback` with `homeHref="/"`, giving a crashed page a way back to the app shell instead of a dead end. **No error capture yet** — Sentry was dropped ahead of the move to GCP; capture lands with that migration. Segment-level boundaries are out of scope for this small app; root-only placement is sufficient.
 
 ## Deploy
 

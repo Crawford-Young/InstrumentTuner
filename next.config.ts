@@ -1,10 +1,8 @@
 import type { NextConfig } from 'next'
 import createMDX from '@next/mdx'
-import { withSentryConfig } from '@sentry/nextjs'
 
-// No Content-Security-Policy yet: AdSense's loader, its ad iframes and the
-// Sentry tunnel all need allow-list entries that only a production check can
-// verify. The headers below are safe on every route.
+// No Content-Security-Policy yet: AdSense's loader and its ad iframes need
+// allow-list entries that only a production check can verify. The headers below are safe on every route.
 const securityHeaders = [
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
@@ -24,12 +22,4 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({})
 
-export default withSentryConfig(withMDX(nextConfig), {
-  org: 'crawford-young',
-  project: 'instrumenttuner',
-  // Source maps upload only when SENTRY_AUTH_TOKEN is set (Vercel production).
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
-  // Route browser events through this origin so ad-blockers don't drop them.
-  tunnelRoute: '/monitoring',
-})
+export default withMDX(nextConfig)

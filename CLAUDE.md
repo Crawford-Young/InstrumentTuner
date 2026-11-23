@@ -11,7 +11,7 @@
 ## Error boundaries
 
 - `src/app/error.tsx` (root) and `src/app/global-error.tsx` use `@crawfordyoung/ui`'s `RouteErrorFallback` (via the `src/lib/ui.ts` named-export shim) with `homeHref="/"` — root/global boundaries strand the user with no surviving nav, so they get the home link; segment boundaries would keep the app shell and would NOT get one (this app has no segment boundaries, root-only is sufficient).
-- **Both boundaries capture to Sentry** via `useEffect(() => Sentry.captureException(error), [error])`. Sentry is env-gated: empty `SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN` (dev, CI, e2e) means `Sentry.init` is a no-op. No session replay on the client (live mic stream, Lighthouse-100 page). Tests mock `@sentry/nextjs`.
+- **No error reporting service.** The boundaries render the fallback UI only; Sentry was dropped ahead of the move to GCP, so capture lands with that migration.
 
 ## AdSense conventions
 
